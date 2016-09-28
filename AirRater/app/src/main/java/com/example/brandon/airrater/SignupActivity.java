@@ -62,7 +62,7 @@ public class SignupActivity extends ActionBarActivity
             object.put("password", password);
             params.put("data", object.toString());
 
-            new Thread(new AsyncDownload("http://hyperracing.com/api/setupsheets.ashx",
+            new Thread(new AsyncDownload("http://192.168.0.19/WebServices/Bin/FindUsers.ashx",
                     params, false, null) {
                 @Override
                 protected void onPostExecute(String result, Object notes) {
