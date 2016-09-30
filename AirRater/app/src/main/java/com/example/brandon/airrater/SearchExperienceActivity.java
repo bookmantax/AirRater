@@ -1,5 +1,8 @@
 package com.example.brandon.airrater;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -7,8 +10,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -26,6 +33,8 @@ public class SearchExperienceActivity extends ActionBarActivity
     Spinner searchTypeSpinner, searchSubTypeSpinner;
     ArrayAdapter<String> spinnerTypeAdapter;
     ArrayAdapter<String> spinnerSubTypeAdapter;
+    SharedPreferences settings;
+    SharedPreferences.Editor editor;
 
 
     @Override
@@ -100,31 +109,40 @@ public class SearchExperienceActivity extends ActionBarActivity
     public void Submit(View view)
     {
         location = String.valueOf(searchCityEditText.getText());
+        settings = getPreferences(0);
+        editor = settings.edit();
 
-        //Service call to get user info (possibly use userId from phone database)
-        try {
-            RequestParams params = new RequestParams();
-            JSONObject object = new JSONObject();
-            object.put("UserId", 1);//Get userId from phone database.
-            object.put("location", location);
-            object.put("businessTypeId", typeId);
-            object.put("businessSubTypeId", subTypeId);
-            params.put("data", object.toString());
 
-            new Thread(new AsyncDownload("http://hyperracing.com/api/setupsheets.ashx",
-                    params, false, null) {
-                @Override
-                protected void onPostExecute(String result, Object notes) {
+        if(RequiredInformationProvided(location, typeId)) {
+            editor.putString("Location", location);
+            editor.putInt("TypeId", typeId);
+            editor.putInt("SubTypeId", subTypeId);
+            Intent activity = new Intent(SearchExperienceActivity.this, ExperienceListActivity.class);
+            startActivity(activity);
 
-                    //responder.uploadFinished(result != null);
-                    super.onPostExecute(result, notes);
-                    String s = result;
-                }
-            }).start();
+
         }
-        catch (Exception e)
+        else
         {
+            Context context = getApplicationContext();
+            CharSequence text = "Please make sure at least Location and Business Type have values.";
+            int duration = Toast.LENGTH_SHORT;
 
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
         }
     }
+
+    private boolean RequiredInformationProvided(String location, int typeId)
+    {
+        if(location != null && typeId != 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
 }
