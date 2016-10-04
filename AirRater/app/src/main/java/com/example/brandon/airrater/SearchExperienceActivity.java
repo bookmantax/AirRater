@@ -3,8 +3,10 @@ package com.example.brandon.airrater;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,6 +16,14 @@ import android.widget.ExpandableListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,20 +31,21 @@ import org.json.JSONObject;
 /**
  * Created by Brandon on 9/26/2016.
  */
-public class SearchExperienceActivity extends ActionBarActivity
+public class SearchExperienceActivity extends AppCompatActivity implements AHBottomNavigation.OnTabSelectedListener
 {
+    private AHBottomNavigation bottomBar;
     String types[] = {"Restaurant", "Drinks", "Entertainment"};
     String restaurantSubTypes[] = {"Grill", "Seafood", "Japanese", "Mexican", "Italian", "Buffet"};
     String drinksSubTypes[] = {"Sports Bar", "Pub", "Fancy Bar"};
     String entertainmentSubTypes[] = {"Movies", "Plays/Broadway", "Live Music", "Circus"};
     String location;
     int typeId, subTypeId;
-    EditText searchCityEditText;
     Spinner searchTypeSpinner, searchSubTypeSpinner;
     ArrayAdapter<String> spinnerTypeAdapter;
     ArrayAdapter<String> spinnerSubTypeAdapter;
     SharedPreferences settings;
     SharedPreferences.Editor editor;
+    PlaceAutocompleteFragment autocompleteFragmentLocation;
 
 
     @Override
@@ -42,7 +53,31 @@ public class SearchExperienceActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_experience);
 
-        searchCityEditText = (EditText)findViewById(R.id.searchCityEditText);
+        autocompleteFragmentLocation = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.searchCityEditText);
+
+        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
+                .build();
+
+        autocompleteFragmentLocation.setFilter(typeFilter);
+
+        autocompleteFragmentLocation.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+
+            }
+        });
+
+        bottomBar = (AHBottomNavigation)findViewById(R.id.checkinNavBar);
+        bottomBar.setOnTabSelectedListener(this);
+        this.CreateNavItems();
 
         searchTypeSpinner = (Spinner)findViewById(R.id.searchTypeSpinner);
         spinnerTypeAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, types);
@@ -99,6 +134,24 @@ public class SearchExperienceActivity extends ActionBarActivity
         });
     }
 
+    private void CreateNavItems()
+    {
+        AHBottomNavigationItem searchItem = new AHBottomNavigationItem("Search", R.drawable.ic_action_name);
+        AHBottomNavigationItem usersItem = new AHBottomNavigationItem("Users", R.drawable.ic_action_name);
+        AHBottomNavigationItem checkInItem = new AHBottomNavigationItem("CheckIn", R.drawable.ic_action_name);
+        AHBottomNavigationItem ratingItem = new AHBottomNavigationItem("Rating", R.drawable.ic_action_name);
+        AHBottomNavigationItem profileItem = new AHBottomNavigationItem("Profile", R.drawable.ic_action_name);
+
+        bottomBar.addItem(searchItem);
+        bottomBar.addItem(usersItem);
+        bottomBar.addItem(checkInItem);
+        bottomBar.addItem(ratingItem);
+        bottomBar.addItem(profileItem);
+
+        bottomBar.setDefaultBackgroundColor(Color.parseColor("#FEFEFE"));
+        bottomBar.setCurrentItem(0);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -108,8 +161,8 @@ public class SearchExperienceActivity extends ActionBarActivity
 
     public void Submit(View view)
     {
-        location = String.valueOf(searchCityEditText.getText());
-        settings = getPreferences(0);
+        location = String.valueOf(autocompleteFragmentLocation.getText(AutocompleteFilter.TYPE_FILTER_CITIES));
+        settings = getSharedPreferences("UserPreferences", 0);
         editor = settings.edit();
 
 
@@ -119,8 +172,6 @@ public class SearchExperienceActivity extends ActionBarActivity
             editor.putInt("SubTypeId", subTypeId);
             Intent activity = new Intent(SearchExperienceActivity.this, ExperienceListActivity.class);
             startActivity(activity);
-
-
         }
         else
         {
@@ -145,4 +196,35 @@ public class SearchExperienceActivity extends ActionBarActivity
         }
     }
 
+    @Override
+    public void onTabSelected(int position, boolean wasSelected)
+    {
+        if(position == 0)
+        {
+            SearchFragment searchFragment = new SearchFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.searchLayout, searchFragment).commit();
+        }
+        else if(position == 1)
+        {
+            UsersFragment usersFragment = new UsersFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.searchLayout, usersFragment).commit();
+        }
+        else if(position == 2)
+        {
+            CheckInFragment checkInFragment = new CheckInFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.searchLayout, checkInFragment).commit();
+        }
+        else if(position == 3)
+        {
+            RatingFragment ratingFragment = new RatingFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.searchLayout, ratingFragment).commit();
+        }
+        else if(position == 4)
+        {
+//            ProfileFragment profileFragment = new ProfileFragment();
+//            getSupportFragmentManager().beginTransaction().replace(R.id.searchLayout, profileFragment).commit();
+            Intent activity = new Intent(SearchExperienceActivity.this, ProfileActivity.class);
+            startActivity(activity);
+        }
+    }
 }

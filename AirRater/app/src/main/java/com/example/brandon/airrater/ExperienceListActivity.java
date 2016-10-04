@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -26,7 +27,7 @@ import java.util.List;
 /**
  * Created by Brandon on 9/27/2016.
  */
-public class ExperienceListActivity extends ActionBarActivity
+public class ExperienceListActivity extends AppCompatActivity
 {
     ExpandableListView experienceExpandableListView;
     private ExpandableExperienceAdapter exAdapter;
@@ -35,7 +36,7 @@ public class ExperienceListActivity extends ActionBarActivity
     private List<ExperienceDetails> ratings;
     private ExperienceItem expItem;
     private ExperienceDetails expDetails;
-    SharedPreferences settings;
+    SharedPreferences settings = getSharedPreferences("UserPreferences", 0);
     SharedPreferences.Editor editor;
 
     @Override
@@ -52,8 +53,6 @@ public class ExperienceListActivity extends ActionBarActivity
     private void prepareListData() {
         listDataHeader = new ArrayList<>();
         listDataChild = new HashMap<>();
-        ratings = new ArrayList<ExperienceDetails>();
-
 
         try {
             RequestParams params = new RequestParams();
@@ -86,20 +85,29 @@ public class ExperienceListActivity extends ActionBarActivity
                     } else
                     {
                         //Store user info in Shared Preferences
-                        settings = getPreferences(0);
                         editor = settings.edit();
                         try {
                             JSONArray jsonArray = new JSONArray(result);
-                            JSONObject oneObject;
+                            JSONObject oneObject, detailsObject;
                             try {
                                 for(int i = 0; i < jsonArray.length(); i++)
                                 {
                                     oneObject = jsonArray.getJSONObject(i);
-                                    expItem = new ExperienceItem(oneObject.getString())
+                                    expItem = new ExperienceItem(oneObject.getString("Name"),
+                                            oneObject.getInt("numActiveCheckins"), oneObject.getInt("stars"), i);
+                                    ratings = new ArrayList<ExperienceDetails>();
+                                    JSONArray jsonRatings = new JSONArray(oneObject.getJSONArray("ratings"));
+                                    for(int j = 0; j < jsonRatings.length(); j++)
+                                    {
+                                        detailsObject = jsonRatings.getJSONObject(j);
+                                        expDetails = new ExperienceDetails(detailsObject.getString("employeeFirstName"),
+                                                detailsObject.getString("employeeLastName"), detailsObject.getString("employeeAirline"),
+                                                detailsObject.getString("comments"), detailsObject.getInt("numStars"));
+                                        ratings.add(expDetails);
+                                    }
+                                    listDataHeader.add(expItem);
+                                    listDataChild.put(listDataHeader.get(i), ratings);
                                 }
-                                // Pulling items from the array
-
-
                             } catch (JSONException e) {
                                 // Oops
                             }
@@ -112,20 +120,6 @@ public class ExperienceListActivity extends ActionBarActivity
         } catch (Exception e) {
 
         }
-
-        // Adding child data
-        for(int i = 0; i < 2; i++)
-        {
-            ExperienceItem item = new ExperienceItem("Arrogas", 1, 1, i);
-            listDataHeader.add(item);
-        }
-
-        // Adding child data, loop through ratings
-        ExperienceDetails rating = new ExperienceDetails("Brandon", "True", "Delta", "I loved it", 5);
-        ratings.add(rating);
-
-
-        listDataChild.put(listDataHeader.get(0), ratings); // Header, Child data
     }
 
     @Override

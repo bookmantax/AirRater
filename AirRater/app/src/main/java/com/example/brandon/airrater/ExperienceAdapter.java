@@ -2,11 +2,14 @@ package com.example.brandon.airrater;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -21,6 +24,8 @@ public class ExperienceAdapter extends ArrayAdapter<ExperienceItem> {
     int layoutResourceId;
     ExperienceItem data[] = null;
     ExperienceItem exp;
+    SharedPreferences settings;
+    SharedPreferences.Editor editor;
 
     public ExperienceAdapter(Context context, int layoutResourceId, ExperienceItem[] data)
     {
@@ -31,7 +36,7 @@ public class ExperienceAdapter extends ArrayAdapter<ExperienceItem> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent)
+    public View getView(int position, View convertView, final ViewGroup parent)
     {
         View row = convertView;
         holder = null;
@@ -45,6 +50,7 @@ public class ExperienceAdapter extends ArrayAdapter<ExperienceItem> {
             holder.txtBusinessName = (TextView)row.findViewById(R.id.businessNameText);
             holder.txtNumUsers = (TextView)row.findViewById(R.id.numUsersText);
             holder.ratingStars = (RatingBar)row.findViewById(R.id.experienceItemRatingBar);
+            holder.btnCheckIn = (Button)row.findViewById(R.id.experienceCheckInButton);
 
             row.setTag(holder);
         }
@@ -58,6 +64,17 @@ public class ExperienceAdapter extends ArrayAdapter<ExperienceItem> {
         holder.txtBusinessName.setText(exp.businessName);
         holder.txtNumUsers.setText(exp.numUsers);
         holder.ratingStars.setNumStars(exp.numStars);
+        holder.btnCheckIn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+
+                settings = parent.getContext().getSharedPreferences("UserPreferences", 0);
+                editor = settings.edit();
+                editor.putString("Business", exp.businessName);
+                Intent activityChangeIntent = new Intent(parent.getContext(), CheckinActivity.class);
+                parent.getContext().startActivity(activityChangeIntent);
+            }
+        });
 
         return row;
     }
@@ -67,5 +84,6 @@ public class ExperienceAdapter extends ArrayAdapter<ExperienceItem> {
         TextView txtBusinessName;
         TextView txtNumUsers;
         RatingBar ratingStars;
+        Button btnCheckIn;
     }
 }

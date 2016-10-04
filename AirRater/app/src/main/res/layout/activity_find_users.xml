@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/findUsersListView"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/findUsersButton" />
+        android:layout_below="@+id/findUsersResponseTextView" />
 
     <Button
         android:layout_width="200dp"
@@ -37,4 +37,12 @@
         android:layout_below="@+id/findUsersLocationEditText"
         android:layout_centerHorizontal="true"
         android:onClick="Search" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/findUsersResponseTextView"
+        android:layout_below="@+id/findUsersButton"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

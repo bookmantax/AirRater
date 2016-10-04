@@ -1,5 +1,8 @@
 package com.example.brandon.airrater;
 
+import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -9,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import org.json.JSONObject;
 
@@ -24,10 +28,12 @@ public class RateExperienceActivity extends ActionBarActivity
     String location, businessName, comments;
     int typeId, subTypeId;
     EditText cityEditText, businessEditText, commentsEditText;
+    TextView rateResponseTextView;
     Spinner typeSpinner, subTypeSpinner;
     RatingBar starsRatingBar;
     ArrayAdapter<String> spinnerTypeAdapter;
     ArrayAdapter<String> spinnerSubTypeAdapter;
+    SharedPreferences settings = getSharedPreferences("UserPreferences", 0);
 
 
     @Override
@@ -35,6 +41,7 @@ public class RateExperienceActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rate_experience);
 
+        rateResponseTextView = (TextView)findViewById(R.id.rateResponseTextView);
         cityEditText = (EditText)findViewById(R.id.searchCityEditText);
         businessEditText = (EditText)findViewById(R.id.nameEditText);
         commentsEditText = (EditText)findViewById(R.id.commentsEditText);
@@ -108,33 +115,63 @@ public class RateExperienceActivity extends ActionBarActivity
         businessName = String.valueOf(businessEditText.getText());
         comments = String.valueOf(commentsEditText.getText());
 
-        //Service call to get user info (possibly use userId from phone database)
-        try {
-            RequestParams params = new RequestParams();
-            JSONObject object = new JSONObject();
-            object.put("UserId", 1);//Get userId from phone database.
-            object.put("location", location);
-            object.put("BusinessName", businessName);
-            object.put("Stars", starsRatingBar.getNumStars());
-            object.put("Comments", comments);
-            object.put("businessTypeId", typeId);
-            object.put("businessSubTypeId", subTypeId);
-            params.put("data", object.toString());
-
-            new Thread(new AsyncDownload("http://hyperracing.com/api/setupsheets.ashx",
-                    params, false, null) {
-                @Override
-                protected void onPostExecute(String result, Object notes) {
-
-                    //responder.uploadFinished(result != null);
-                    super.onPostExecute(result, notes);
-                    String s = result;
-                }
-            }).start();
-        }
-        catch (Exception e)
+        if(RequiredFieldsHaveValue(settings.getInt("UserId", 0), businessName, typeId, location))
         {
+            try {
+                RequestParams params = new RequestParams();
+                JSONObject object = new JSONObject();
+                object.put("UserId", settings.getString("UserId", ""));
+                object.put("location", location);
+                object.put("BusinessName", businessName);
+                object.put("Stars", starsRatingBar.getNumStars());
+                object.put("Comments", comments);
+                object.put("businessTypeId", typeId);
+                object.put("businessSubTypeId", subTypeId);
+                params.put("data", object.toString());
 
+                new Thread(new AsyncDownload("http://192.168.0.19/WebServices/Bin/CreateRating.ashx",
+                        params, false, null) {
+                    @Override
+                    protected void onPostExecute(String result, Object notes) {
+
+                        //responder.uploadFinished(result != null);
+                        super.onPostExecute(result, notes);
+                        String s = result;
+                        if(s.equalsIgnoreCase("Missing Information"))
+                        {
+                            rateResponseTextView.setText("Something went wrong please try again.");
+                            rateResponseTextView.setTextColor(Color.RED);
+                        }
+                        else
+                        {
+                            rateResponseTextView.setText("Saved Successfully.");
+                            rateResponseTextView.setTextColor(Color.GREEN);
+                            cityEditText.setText("");
+                            typeSpinner.setSelection(0);
+                            subTypeSpinner.setSelection(0);
+                            businessEditText.setText("");
+                            starsRatingBar.setNumStars(0);
+                            commentsEditText.setText("");
+                        }
+                    }
+                }).start();
+            } catch (Exception e) {
+
+            }
         }
+        else
+        {
+            rateResponseTextView.setText("Please make sure at least business name, location, and type have values.");
+            rateResponseTextView.setTextColor(Color.RED);
+        }
+    }
+
+    private boolean RequiredFieldsHaveValue(int userId, String businessName, int typeId, String location)
+    {
+        if(userId != 0 && businessName != null && typeId != 0 && location != null)
+        {
+            return true;
+        }
+        return false;
     }
 }

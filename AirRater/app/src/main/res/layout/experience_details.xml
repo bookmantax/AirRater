@@ -8,7 +8,41 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
-        android:id="@+id/brandon"
+        android:id="@+id/employeeNameTextView"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp" />
+
+    <RatingBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/deatailsRatingBar"
+        android:layout_below="@+id/employeeNameTextView"
+        android:scaleX="0.5"
+        android:scaleY="0.5"
+        android:transformPivotX="0dp"
+        android:layout_alignStart="@+id/employeeNameTextView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:id="@+id/employeeAirlineTextView"
+        android:layout_alignTop="@+id/employeeNameTextView"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:id="@+id/employeeCommentsTextView"
+        android:layout_below="@+id/deatailsRatingBar"
+        android:layout_alignStart="@+id/deatailsRatingBar"
+        android:layout_alignEnd="@+id/employeeAirlineTextView"
+        android:layout_alignParentBottom="true" />
 </RelativeLayout>

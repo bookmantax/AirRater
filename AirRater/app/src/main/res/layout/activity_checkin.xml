@@ -13,25 +13,29 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp" />
 
-    <EditText
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
+    <fragment
         android:id="@+id/checkinLocationEditText"
         android:layout_below="@+id/textView30"
         android:layout_centerHorizontal="true"
         android:text="Location"
         android:layout_marginBottom="10dp"
-        android:gravity="center_vertical|center_horizontal" />
-
-    <EditText
+        android:gravity="center_vertical|center_horizontal"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+        />
+
+    <fragment
         android:id="@+id/checkBusinessNameEditText"
         android:layout_below="@+id/checkinLocationEditText"
         android:layout_centerHorizontal="true"
         android:text="Business Name"
+        android:layout_marginBottom="10dp"
         android:gravity="center_vertical|center_horizontal"
-        android:layout_marginBottom="10dp" />
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+        />
 
     <Button
         android:layout_width="75dp"
@@ -46,7 +50,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/checkinUsersListView"
-        android:layout_below="@+id/checkinCheckinButton"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true" />
+        android:layout_below="@+id/checkinResponseTextView"
+        android:layout_above="@+id/checkinNavBar"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/checkinResponseTextView"
+        android:layout_below="@+id/checkinCheckinButton"
+        android:layout_centerHorizontal="true" />
+
+    <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkinNavBar"
+        android:layout_alignParentBottom="true"
+        >
+    </com.aurelhubert.ahbottomnavigation.AHBottomNavigation>
+
+
 </RelativeLayout>

@@ -83,12 +83,11 @@
         android:layout_height="wrap_content"
         android:text="Create Account"
         android:id="@+id/createAccountButton"
-        android:layout_below="@+id/textView7"
-        android:layout_alignLeft="@+id/firstEditText"
-        android:layout_alignStart="@+id/firstEditText"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="65dp"
         android:clickable="true"
-        android:onClick="CreateUser" />
+        android:onClick="CreateUser"
+        android:layout_below="@+id/textView7"
+        android:layout_centerHorizontal="true" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -146,4 +145,14 @@
         android:layout_toRightOf="@+id/textView6"
         android:layout_alignRight="@+id/usernameEditText"
         android:layout_alignEnd="@+id/usernameEditText" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:id="@+id/signupResponseTextView"
+        android:layout_below="@+id/createAccountButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp" />
 </RelativeLayout>

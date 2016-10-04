@@ -17,5 +17,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/experienceExpandableListView"
         android:layout_below="@+id/textView22"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:focusable="true" />
 </RelativeLayout>

@@ -43,7 +43,7 @@ public class ExpandableExperienceAdapter extends BaseExpandableListAdapter {
     public View getChildView(int groupPosition, final int childPosition, boolean isLastChild,
                              View convertView, ViewGroup parent)
     {
-        final String childText = (String) getChild(groupPosition, childPosition);
+        final ExperienceDetails childDetails = (ExperienceDetails) getChild(groupPosition, childPosition);
 
         //if (convertView == null) {
         LayoutInflater infalInflater = (LayoutInflater) this._context
@@ -51,10 +51,19 @@ public class ExpandableExperienceAdapter extends BaseExpandableListAdapter {
         final View row = infalInflater.inflate(R.layout.experience_details, null);
         //}
 
-        final TextView txtListChild = (TextView) row
-                .findViewById(R.id.brandon);
+        final TextView empName = (TextView) row
+                .findViewById(R.id.employeeNameTextView);
+        final TextView empAirline = (TextView) row
+                .findViewById(R.id.employeeAirlineTextView);
+        final RatingBar empRating = (RatingBar) row
+                .findViewById(R.id.deatailsRatingBar);
+        final TextView empComments = (TextView) row
+                .findViewById(R.id.employeeCommentsTextView);
 
-        txtListChild.setText(childText);
+        empName.setText(childDetails.employeeFirstName + " " + childDetails.employeeLastname);
+        empAirline.setText(childDetails.employeeAirline);
+        empRating.setNumStars(childDetails.numStars);
+        empComments.setText(childDetails.comments);
         return row;
     }
 
