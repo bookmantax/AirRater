@@ -90,4 +90,12 @@
         android:layout_centerHorizontal="true"
         android:onClick="Search" />
 
+    <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/searchNavBar"
+        android:layout_alignParentBottom="true"
+        >
+    </com.aurelhubert.ahbottomnavigation.AHBottomNavigation>
+
 </RelativeLayout>

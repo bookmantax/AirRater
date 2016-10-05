@@ -75,7 +75,7 @@ public class SearchExperienceActivity extends AppCompatActivity implements AHBot
             }
         });
 
-        bottomBar = (AHBottomNavigation)findViewById(R.id.checkinNavBar);
+        bottomBar = (AHBottomNavigation)findViewById(R.id.searchNavBar);
         bottomBar.setOnTabSelectedListener(this);
         this.CreateNavItems();
 
@@ -92,21 +92,21 @@ public class SearchExperienceActivity extends AppCompatActivity implements AHBot
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 if(position == 0)
                 {
-                    spinnerSubTypeAdapter = new ArrayAdapter<String>(new RateExperienceActivity(), R.layout.support_simple_spinner_dropdown_item, restaurantSubTypes);
+                    spinnerSubTypeAdapter = new ArrayAdapter<String>(SearchExperienceActivity.this, R.layout.support_simple_spinner_dropdown_item, restaurantSubTypes);
                     spinnerSubTypeAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
                     searchSubTypeSpinner.setAdapter(spinnerSubTypeAdapter);
                     typeId = 1;
                 }
                 else if(position == 1)
                 {
-                    spinnerSubTypeAdapter = new ArrayAdapter<String>(new RateExperienceActivity(), R.layout.support_simple_spinner_dropdown_item, drinksSubTypes);
+                    spinnerSubTypeAdapter = new ArrayAdapter<String>(SearchExperienceActivity.this, R.layout.support_simple_spinner_dropdown_item, drinksSubTypes);
                     spinnerSubTypeAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
                     searchSubTypeSpinner.setAdapter(spinnerSubTypeAdapter);
                     typeId = 2;
                 }
                 else if(position == 2)
                 {
-                    spinnerSubTypeAdapter = new ArrayAdapter<String>(new RateExperienceActivity(), R.layout.support_simple_spinner_dropdown_item, entertainmentSubTypes);
+                    spinnerSubTypeAdapter = new ArrayAdapter<String>(SearchExperienceActivity.this, R.layout.support_simple_spinner_dropdown_item, entertainmentSubTypes);
                     spinnerSubTypeAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
                     searchSubTypeSpinner.setAdapter(spinnerSubTypeAdapter);
                     typeId = 3;
@@ -201,28 +201,25 @@ public class SearchExperienceActivity extends AppCompatActivity implements AHBot
     {
         if(position == 0)
         {
-            SearchFragment searchFragment = new SearchFragment();
-            getSupportFragmentManager().beginTransaction().replace(R.id.searchLayout, searchFragment).commit();
+            //do nothing
         }
         else if(position == 1)
         {
-            UsersFragment usersFragment = new UsersFragment();
-            getSupportFragmentManager().beginTransaction().replace(R.id.searchLayout, usersFragment).commit();
+            Intent activity = new Intent(SearchExperienceActivity.this, FindUsersActivity.class);
+            startActivity(activity);
         }
         else if(position == 2)
         {
-            CheckInFragment checkInFragment = new CheckInFragment();
-            getSupportFragmentManager().beginTransaction().replace(R.id.searchLayout, checkInFragment).commit();
+            Intent activity = new Intent(SearchExperienceActivity.this, CheckinActivity.class);
+            startActivity(activity);
         }
         else if(position == 3)
         {
-            RatingFragment ratingFragment = new RatingFragment();
-            getSupportFragmentManager().beginTransaction().replace(R.id.searchLayout, ratingFragment).commit();
+            Intent activity = new Intent(SearchExperienceActivity.this, RateExperienceActivity.class);
+            startActivity(activity);
         }
         else if(position == 4)
         {
-//            ProfileFragment profileFragment = new ProfileFragment();
-//            getSupportFragmentManager().beginTransaction().replace(R.id.searchLayout, profileFragment).commit();
             Intent activity = new Intent(SearchExperienceActivity.this, ProfileActivity.class);
             startActivity(activity);
         }

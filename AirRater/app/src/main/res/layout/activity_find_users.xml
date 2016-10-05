@@ -45,4 +45,12 @@
         android:id="@+id/findUsersResponseTextView"
         android:layout_below="@+id/findUsersButton"
         android:layout_centerHorizontal="true" />
+
+    <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/usersNavBar"
+        android:layout_alignParentBottom="true"
+        >
+    </com.aurelhubert.ahbottomnavigation.AHBottomNavigation>
 </RelativeLayout>

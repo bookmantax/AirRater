@@ -1,10 +1,12 @@
 package com.example.brandon.airrater;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,26 +16,36 @@ import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+
 import org.json.JSONObject;
 
 /**
  * Created by Brandon on 9/26/2016.
  */
-public class RateExperienceActivity extends ActionBarActivity
+public class RateExperienceActivity extends AppCompatActivity implements AHBottomNavigation.OnTabSelectedListener
 {
+    private AHBottomNavigation bottomBar;
     String types[] = {"Restaurant", "Drinks", "Entertainment"};
     String restaurantSubTypes[] = {"Grill", "Seafood", "Japanese", "Mexican", "Italian", "Buffet"};
     String drinksSubTypes[] = {"Sports Bar", "Pub", "Fancy Bar"};
     String entertainmentSubTypes[] = {"Movies", "Plays/Broadway", "Live Music", "Circus"};
     String location, businessName, comments;
     int typeId, subTypeId;
-    EditText cityEditText, businessEditText, commentsEditText;
+    EditText commentsEditText;
     TextView rateResponseTextView;
     Spinner typeSpinner, subTypeSpinner;
     RatingBar starsRatingBar;
     ArrayAdapter<String> spinnerTypeAdapter;
     ArrayAdapter<String> spinnerSubTypeAdapter;
-    SharedPreferences settings = getSharedPreferences("UserPreferences", 0);
+    SharedPreferences settings;
+    PlaceAutocompleteFragment autocompleteFragmentLocation, autocompleteFragmentBusiness;
 
 
     @Override
@@ -41,9 +53,51 @@ public class RateExperienceActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rate_experience);
 
+        autocompleteFragmentLocation = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.searchCityEditText);
+
+        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
+                .build();
+
+        autocompleteFragmentLocation.setFilter(typeFilter);
+
+        autocompleteFragmentLocation.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+
+            }
+        });
+
+        autocompleteFragmentBusiness  = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.nameEditText);
+
+        AutocompleteFilter typeFilterBusiness = new AutocompleteFilter.Builder()
+                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ESTABLISHMENT)
+                .build();
+
+        autocompleteFragmentLocation.setFilter(typeFilterBusiness);
+
+        autocompleteFragmentLocation.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+
+            }
+        });
+
         rateResponseTextView = (TextView)findViewById(R.id.rateResponseTextView);
-        cityEditText = (EditText)findViewById(R.id.searchCityEditText);
-        businessEditText = (EditText)findViewById(R.id.nameEditText);
         commentsEditText = (EditText)findViewById(R.id.commentsEditText);
         starsRatingBar = (RatingBar)findViewById(R.id.starsRatingBar);
 
@@ -60,21 +114,21 @@ public class RateExperienceActivity extends ActionBarActivity
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 if(position == 0)
                 {
-                    spinnerSubTypeAdapter = new ArrayAdapter<String>(new RateExperienceActivity(), R.layout.support_simple_spinner_dropdown_item, restaurantSubTypes);
+                    spinnerSubTypeAdapter = new ArrayAdapter<String>(RateExperienceActivity.this, R.layout.support_simple_spinner_dropdown_item, restaurantSubTypes);
                     spinnerSubTypeAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
                     subTypeSpinner.setAdapter(spinnerSubTypeAdapter);
                     typeId = 1;
                 }
                 else if(position == 1)
                 {
-                    spinnerSubTypeAdapter = new ArrayAdapter<String>(new RateExperienceActivity(), R.layout.support_simple_spinner_dropdown_item, drinksSubTypes);
+                    spinnerSubTypeAdapter = new ArrayAdapter<String>(RateExperienceActivity.this, R.layout.support_simple_spinner_dropdown_item, drinksSubTypes);
                     spinnerSubTypeAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
                     subTypeSpinner.setAdapter(spinnerSubTypeAdapter);
                     typeId = 2;
                 }
                 else if(position == 2)
                 {
-                    spinnerSubTypeAdapter = new ArrayAdapter<String>(new RateExperienceActivity(), R.layout.support_simple_spinner_dropdown_item, entertainmentSubTypes);
+                    spinnerSubTypeAdapter = new ArrayAdapter<String>(RateExperienceActivity.this, R.layout.support_simple_spinner_dropdown_item, entertainmentSubTypes);
                     spinnerSubTypeAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
                     subTypeSpinner.setAdapter(spinnerSubTypeAdapter);
                     typeId = 3;
@@ -100,6 +154,10 @@ public class RateExperienceActivity extends ActionBarActivity
             }
 
         });
+
+        bottomBar = (AHBottomNavigation)findViewById(R.id.ratingNavBar);
+        bottomBar.setOnTabSelectedListener(this);
+        this.CreateNavItems();
     }
 
     @Override
@@ -109,11 +167,30 @@ public class RateExperienceActivity extends ActionBarActivity
         return true;
     }
 
+    private void CreateNavItems()
+    {
+        AHBottomNavigationItem searchItem = new AHBottomNavigationItem("Search", R.drawable.ic_action_name);
+        AHBottomNavigationItem usersItem = new AHBottomNavigationItem("Users", R.drawable.ic_action_name);
+        AHBottomNavigationItem checkInItem = new AHBottomNavigationItem("CheckIn", R.drawable.ic_action_name);
+        AHBottomNavigationItem ratingItem = new AHBottomNavigationItem("Rating", R.drawable.ic_action_name);
+        AHBottomNavigationItem profileItem = new AHBottomNavigationItem("Profile", R.drawable.ic_action_name);
+
+        bottomBar.addItem(searchItem);
+        bottomBar.addItem(usersItem);
+        bottomBar.addItem(checkInItem);
+        bottomBar.addItem(ratingItem);
+        bottomBar.addItem(profileItem);
+
+        bottomBar.setDefaultBackgroundColor(Color.parseColor("#FEFEFE"));
+        bottomBar.setCurrentItem(3);
+    }
+
     public void Submit(View view)
     {
-        location = String.valueOf(cityEditText.getText());
-        businessName = String.valueOf(businessEditText.getText());
+        location = String.valueOf(autocompleteFragmentLocation.getText(AutocompleteFilter.TYPE_FILTER_CITIES));
+        businessName = String.valueOf(autocompleteFragmentBusiness.getText(AutocompleteFilter.TYPE_FILTER_ESTABLISHMENT));
         comments = String.valueOf(commentsEditText.getText());
+        settings = getSharedPreferences("UserPreferences", 0);
 
         if(RequiredFieldsHaveValue(settings.getInt("UserId", 0), businessName, typeId, location))
         {
@@ -146,10 +223,10 @@ public class RateExperienceActivity extends ActionBarActivity
                         {
                             rateResponseTextView.setText("Saved Successfully.");
                             rateResponseTextView.setTextColor(Color.GREEN);
-                            cityEditText.setText("");
+                            autocompleteFragmentLocation.setText("");
                             typeSpinner.setSelection(0);
                             subTypeSpinner.setSelection(0);
-                            businessEditText.setText("");
+                            autocompleteFragmentBusiness.setText("");
                             starsRatingBar.setNumStars(0);
                             commentsEditText.setText("");
                         }
@@ -173,5 +250,34 @@ public class RateExperienceActivity extends ActionBarActivity
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onTabSelected(int position, boolean wasSelected)
+    {
+        if(position == 0)
+        {
+            Intent activity = new Intent(RateExperienceActivity.this, SearchExperienceActivity.class);
+            startActivity(activity);
+        }
+        else if(position == 1)
+        {
+            Intent activity = new Intent(RateExperienceActivity.this, FindUsersActivity.class);
+            startActivity(activity);
+        }
+        else if(position == 2)
+        {
+            Intent activity = new Intent(RateExperienceActivity.this, CheckinActivity.class);
+            startActivity(activity);
+        }
+        else if(position == 3)
+        {
+            //do nothing
+        }
+        else if(position == 4)
+        {
+            Intent activity = new Intent(RateExperienceActivity.this, ProfileActivity.class);
+            startActivity(activity);
+        }
     }
 }

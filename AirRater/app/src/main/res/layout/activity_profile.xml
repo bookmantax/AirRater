@@ -106,10 +106,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
         android:id="@+id/profileResponseTextView"
         android:layout_below="@+id/profileSubmitButton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:textColor="#ffff0005" />
+
+    <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/profileNavBar"
+        android:layout_alignParentBottom="true"
+        >
+    </com.aurelhubert.ahbottomnavigation.AHBottomNavigation>
 </RelativeLayout>

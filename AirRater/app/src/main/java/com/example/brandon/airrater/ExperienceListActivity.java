@@ -36,14 +36,14 @@ public class ExperienceListActivity extends AppCompatActivity
     private List<ExperienceDetails> ratings;
     private ExperienceItem expItem;
     private ExperienceDetails expDetails;
-    SharedPreferences settings = getSharedPreferences("UserPreferences", 0);
+    SharedPreferences settings;
     SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_experience_list);
-
+        settings = getSharedPreferences("UserPreferences", 0);
         experienceExpandableListView = (ExpandableListView)findViewById(R.id.experienceExpandableListView);
         prepareListData();
         exAdapter = new ExpandableExperienceAdapter(this, listDataHeader, listDataChild);
