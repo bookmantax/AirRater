@@ -53,15 +53,18 @@ public class SearchExperienceActivity extends AppCompatActivity implements AHBot
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_experience);
 
+        settings = getSharedPreferences("UserPreferences", 0);
+        editor = settings.edit();
+
         autocompleteFragmentLocation = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.searchCityEditText);
 
         AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
                 .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
                 .build();
-
         autocompleteFragmentLocation.setFilter(typeFilter);
 
+        autocompleteFragmentLocation.setText(settings.getString("Location", ""));
         autocompleteFragmentLocation.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
@@ -162,9 +165,6 @@ public class SearchExperienceActivity extends AppCompatActivity implements AHBot
     public void Submit(View view)
     {
         location = String.valueOf(autocompleteFragmentLocation.getText(AutocompleteFilter.TYPE_FILTER_CITIES));
-        settings = getSharedPreferences("UserPreferences", 0);
-        editor = settings.edit();
-
 
         if(RequiredInformationProvided(location, typeId)) {
             editor.putString("Location", location);
@@ -201,27 +201,28 @@ public class SearchExperienceActivity extends AppCompatActivity implements AHBot
     {
         if(position == 0)
         {
-            //do nothing
+            SearchFragment searchFragment = new SearchFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, searchFragment).commit();
         }
         else if(position == 1)
         {
-            Intent activity = new Intent(SearchExperienceActivity.this, FindUsersActivity.class);
-            startActivity(activity);
+            UsersFragment usersFragment = new UsersFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, usersFragment).commit();
         }
         else if(position == 2)
         {
-            Intent activity = new Intent(SearchExperienceActivity.this, CheckinActivity.class);
-            startActivity(activity);
+            CheckInFragment checkInFragment = new CheckInFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, checkInFragment).commit();
         }
         else if(position == 3)
         {
-            Intent activity = new Intent(SearchExperienceActivity.this, RateExperienceActivity.class);
-            startActivity(activity);
+            RatingFragment ratingFragment = new RatingFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, ratingFragment).commit();
         }
         else if(position == 4)
         {
-            Intent activity = new Intent(SearchExperienceActivity.this, ProfileActivity.class);
-            startActivity(activity);
+            ProfileFragment profileFragment = new ProfileFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, profileFragment).commit();
         }
     }
 }

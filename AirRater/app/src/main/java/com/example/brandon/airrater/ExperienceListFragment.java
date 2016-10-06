@@ -1,16 +1,14 @@
 package com.example.brandon.airrater;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -20,15 +18,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by Brandon on 9/27/2016.
+ * Created by Brandon on 10/5/2016.
  */
-public class ExperienceListActivity extends AppCompatActivity
+
+public class ExperienceListFragment extends android.support.v4.app.Fragment
 {
+
     ExpandableListView experienceExpandableListView;
     private ExpandableExperienceAdapter exAdapter;
     private List<ExperienceItem> listDataHeader;
@@ -37,20 +36,28 @@ public class ExperienceListActivity extends AppCompatActivity
     private ExperienceItem expItem;
     private ExperienceDetails expDetails;
     SharedPreferences settings;
-    SharedPreferences.Editor editor;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_experience_list);
-        settings = getSharedPreferences("UserPreferences", 0);
-        experienceExpandableListView = (ExpandableListView)findViewById(R.id.experienceExpandableListView);
+        settings = getContext().getSharedPreferences("UserPreferences", 0);
         PrepareListData();
-        exAdapter = new ExpandableExperienceAdapter(this, listDataHeader, listDataChild);
-        experienceExpandableListView.setAdapter(exAdapter);
     }
 
-    private void PrepareListData() {
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.activity_experience_list, container, false);
+
+        experienceExpandableListView = (ExpandableListView)getActivity().findViewById(R.id.experienceExpandableListView);
+        exAdapter = new ExpandableExperienceAdapter(getContext(), listDataHeader, listDataChild);
+        experienceExpandableListView.setAdapter(exAdapter);
+
+        return rootView;
+    }
+
+    private void PrepareListData()
+    {
         listDataHeader = new ArrayList<>();
         listDataChild = new HashMap<>();
 
@@ -71,7 +78,7 @@ public class ExperienceListActivity extends AppCompatActivity
                     super.onPostExecute(result, notes);
                     String s = result;
                     if (s.equalsIgnoreCase("Missing Information")) {
-                        Context context = getApplicationContext();
+                        Context context = getContext();
                         CharSequence text = "Something went wrong, please try again.";
                         int duration = Toast.LENGTH_SHORT;
 
@@ -84,8 +91,6 @@ public class ExperienceListActivity extends AppCompatActivity
 
                     } else
                     {
-                        //Store user info in Shared Preferences
-                        editor = settings.edit();
                         try {
                             JSONArray jsonArray = new JSONArray(result);
                             JSONObject oneObject, detailsObject;
@@ -122,10 +127,4 @@ public class ExperienceListActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return true;
-    }
 }
