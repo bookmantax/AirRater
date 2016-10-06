@@ -1,9 +1,15 @@
 package com.example.brandon.airrater;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +22,15 @@ import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Brandon on 10/4/2016.
@@ -30,11 +41,25 @@ public class UsersFragment extends android.support.v4.app.Fragment
     PlaceAutocompleteFragment autocompleteFragmentLocation;
     private TextView findUsersResponseTextView;
     private ListView findUsersListView;
-    private String location;
+    private String location, city, country;
     private UserItem items[];
     private UserAdapter adapter;
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
+    private Activity mActivity;
+    private LatLng latLng;
+    Geocoder geocoder;
+    List<Address> addresses;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof Activity){
+            mActivity = (Activity) context;
+        }
+
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,9 +72,9 @@ public class UsersFragment extends android.support.v4.app.Fragment
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.activity_find_users, container, false);
+        final View rootView = inflater.inflate(R.layout.activity_find_users, container, false);
 
-        autocompleteFragmentLocation = (PlaceAutocompleteFragment) getActivity().getFragmentManager().findFragmentById(R.id.findUsersLocationEditText);
+        autocompleteFragmentLocation = (PlaceAutocompleteFragment) mActivity.getFragmentManager().findFragmentById(R.id.findUsersLocationEditText);
         autocompleteFragmentLocation.setText(settings.getString("Location", ""));
         AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
                 .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
@@ -61,6 +86,21 @@ public class UsersFragment extends android.support.v4.app.Fragment
             @Override
             public void onPlaceSelected(Place place) {
                 // TODO: Get info about the selected place.
+                geocoder = new Geocoder(rootView.getContext(), Locale.getDefault());
+                latLng = place.getLatLng();
+                try {
+                    addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+                } catch (Exception e){}
+                if(addresses != null && addresses.size() > 0)
+                {
+                    city = addresses.get(0).getAddressLine(1);
+                    country = addresses.get(0).getAddressLine(2);
+                    if(city != null && country != null)
+                    {
+                        location = city + ", " + country;
+                        editor.putString("Location", location);
+                    }
+                }
                 SearchSetAdapter();
             }
 
@@ -71,8 +111,8 @@ public class UsersFragment extends android.support.v4.app.Fragment
             }
         });
 
-        findUsersListView = (ListView)getActivity().findViewById(R.id.findUsersListView);
-        findUsersResponseTextView = (TextView)getActivity().findViewById(R.id.findUsersResponseTextView);
+        findUsersListView = (ListView)rootView.findViewById(R.id.findUsersListView);
+        findUsersResponseTextView = (TextView)rootView.findViewById(R.id.findUsersResponseTextView);
 
         if(items == null)
         {
@@ -89,7 +129,6 @@ public class UsersFragment extends android.support.v4.app.Fragment
 
     private void SearchSetAdapter()
     {
-        location = String.valueOf(autocompleteFragmentLocation.getText(AutocompleteFilter.TYPE_FILTER_CITIES));
         if(location != null && location != "")
         {
             if(location != settings.getString("Location", ""))
@@ -154,7 +193,6 @@ public class UsersFragment extends android.support.v4.app.Fragment
 
     public void SearchOnStart()
     {
-        location = String.valueOf(autocompleteFragmentLocation.getText(AutocompleteFilter.TYPE_FILTER_CITIES));
         if(location != null && location != "")
         {
             if(location != settings.getString("Location", ""))
@@ -176,8 +214,7 @@ public class UsersFragment extends android.support.v4.app.Fragment
                         super.onPostExecute(result, notes);
                         if(result.equalsIgnoreCase("Missing Information"))
                         {
-                            findUsersResponseTextView.setText("Something went wrong please try again.");
-                            findUsersResponseTextView.setTextColor(Color.RED);
+
                         }
                         else if(result.equalsIgnoreCase("User not found"))
                         {
@@ -206,8 +243,7 @@ public class UsersFragment extends android.support.v4.app.Fragment
         }
         else
         {
-            findUsersResponseTextView.setText("Please make sure Location has a value.");
-            findUsersResponseTextView.setTextColor(Color.RED);
+
         }
     }
 }

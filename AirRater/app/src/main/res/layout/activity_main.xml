@@ -7,7 +7,7 @@
     <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/searchNavBar"
+        android:id="@+id/mainNavBar"
         android:layout_alignParentBottom="true"
         >
     </com.aurelhubert.ahbottomnavigation.AHBottomNavigation>

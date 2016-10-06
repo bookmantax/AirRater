@@ -1,5 +1,7 @@
 package com.example.brandon.airrater;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -37,6 +39,17 @@ public class CheckInFragment extends android.support.v4.app.Fragment
     SharedPreferences settings;
     SharedPreferences.Editor editor;
     PlaceAutocompleteFragment autocompleteFragmentLocation, autocompleteFragmentBusiness;
+    private Activity mActivity;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof Activity){
+            mActivity = (Activity) context;
+        }
+
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,12 +71,18 @@ public class CheckInFragment extends android.support.v4.app.Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_checkin, container, false);
 
-        checkinResponseTextView = (TextView) getActivity().findViewById(R.id.checkinResponseTextView);
-        checkinUsersListView = (ListView) getActivity().findViewById(R.id.checkinUsersListView);
-        checkinCheckinButton = (Button) getActivity().findViewById(R.id.checkinCheckinButton);
+        checkinResponseTextView = (TextView) rootView.findViewById(R.id.checkinResponseTextView);
+        checkinUsersListView = (ListView) rootView.findViewById(R.id.checkinUsersListView);
+        checkinCheckinButton = (Button) rootView.findViewById(R.id.checkinCheckinButton);
+        checkinCheckinButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Checkin();
+            }
+        });
 
         autocompleteFragmentLocation = (PlaceAutocompleteFragment)
-                getActivity().getFragmentManager().findFragmentById(R.id.checkinLocationEditText);
+                mActivity.getFragmentManager().findFragmentById(R.id.checkinLocationEditText);
 
         AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
                 .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
@@ -86,7 +105,7 @@ public class CheckInFragment extends android.support.v4.app.Fragment
         });
 
         autocompleteFragmentBusiness  = (PlaceAutocompleteFragment)
-                getActivity().getFragmentManager().findFragmentById(R.id.checkBusinessNameEditText);
+                mActivity.getFragmentManager().findFragmentById(R.id.checkBusinessNameEditText);
 
         AutocompleteFilter typeFilterBusiness = new AutocompleteFilter.Builder()
                 .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ESTABLISHMENT)
@@ -134,12 +153,11 @@ public class CheckInFragment extends android.support.v4.app.Fragment
                     //responder.uploadFinished(result != null);
                     super.onPostExecute(result, notes);
                     String s = result;
-                    if(s.equalsIgnoreCase("Missing Information"))
+                    if(s != null && s.equalsIgnoreCase("Missing Information"))
                     {
-                        checkinResponseTextView.setText("Something went wrong please try again.");
-                        checkinResponseTextView.setTextColor(Color.RED);
+
                     }
-                    else if(s.equalsIgnoreCase("User not found"))
+                    else if(s != null && s.equalsIgnoreCase("User not found"))
                     {
                         items = new UserItem[1];
                         items[0] = new UserItem("No Users Found", "", "");
@@ -173,7 +191,7 @@ public class CheckInFragment extends android.support.v4.app.Fragment
         }
     }
 
-    public void Checkin(View view)
+    public void Checkin()
     {
         location = String.valueOf(autocompleteFragmentLocation.getText(AutocompleteFilter.TYPE_FILTER_CITIES));
         businessName = String.valueOf(autocompleteFragmentLocation.getText(AutocompleteFilter.TYPE_FILTER_ESTABLISHMENT));
@@ -200,7 +218,7 @@ public class CheckInFragment extends android.support.v4.app.Fragment
                     {
                         //responder.uploadFinished(result != null);
                         super.onPostExecute(result, notes);
-                        if(result.equalsIgnoreCase("Missing Information"))
+                        if(result != null && result.equalsIgnoreCase("Missing Information"))
                         {
                             checkinResponseTextView.setText("Something went wrong, please try again.");
                             checkinResponseTextView.setTextColor(Color.RED);

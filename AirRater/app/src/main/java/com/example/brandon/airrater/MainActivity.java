@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        bottomBar = (AHBottomNavigation)findViewById(R.id.searchNavBar);
+        bottomBar = (AHBottomNavigation)findViewById(R.id.mainNavBar);
         bottomBar.setOnTabSelectedListener(this);
         this.CreateNavItems();
     }
@@ -49,27 +49,28 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     {
         if(position == 0)
         {
-            //do nothing
+            SearchFragment searchFragment = new SearchFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, searchFragment).commit();
         }
         else if(position == 1)
         {
-            Intent activity = new Intent(MainActivity.this, FindUsersActivity.class);
-            startActivity(activity);
+            UsersFragment usersFragment = new UsersFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, usersFragment).commit();
         }
         else if(position == 2)
         {
-            Intent activity = new Intent(MainActivity.this, CheckinActivity.class);
-            startActivity(activity);
+            CheckInFragment checkInFragment = new CheckInFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, checkInFragment).commit();
         }
         else if(position == 3)
         {
-            Intent activity = new Intent(MainActivity.this, RateExperienceActivity.class);
-            startActivity(activity);
+            RatingFragment ratingFragment = new RatingFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, ratingFragment).commit();
         }
         else if(position == 4)
         {
-            Intent activity = new Intent(MainActivity.this, ProfileActivity.class);
-            startActivity(activity);
+            ProfileFragment profileFragment = new ProfileFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, profileFragment).commit();
         }
     }
 }

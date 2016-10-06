@@ -76,12 +76,12 @@ public class SearchFragment extends android.support.v4.app.Fragment
             }
         });
 
-        searchTypeSpinner = (Spinner)getActivity().findViewById(R.id.searchTypeSpinner);
+        searchTypeSpinner = (Spinner)rootView.findViewById(R.id.searchTypeSpinner);
         spinnerTypeAdapter = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, types);
         spinnerTypeAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         searchTypeSpinner.setAdapter(spinnerTypeAdapter);
 
-        searchSubTypeSpinner = (Spinner)getActivity().findViewById(R.id.searchSubTypeSpinner);
+        searchSubTypeSpinner = (Spinner)rootView.findViewById(R.id.searchSubTypeSpinner);
 
         //When type is selected, populate subType
         searchTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
