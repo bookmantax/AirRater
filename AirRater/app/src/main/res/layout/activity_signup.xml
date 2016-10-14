@@ -7,7 +7,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Sign Up"
+        android:text="Register"
         android:id="@+id/textView"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -117,7 +117,7 @@
         android:layout_toRightOf="@+id/textView4"
         android:layout_toEndOf="@+id/textView4" />
 
-    <EditText
+    <AutoCompleteTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/airlineEditText"
@@ -150,9 +150,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
         android:id="@+id/signupResponseTextView"
         android:layout_below="@+id/createAccountButton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp" />
+
+    <Button
+        android:text="Login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/createAccountButton"
+        android:id="@+id/signupLoginButton"
+        android:layout_alignEnd="@+id/createAccountButton"
+        android:layout_alignStart="@+id/createAccountButton"
+        android:onClick="Login" />
 </RelativeLayout>

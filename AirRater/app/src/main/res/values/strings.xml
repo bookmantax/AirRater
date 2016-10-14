@@ -1,3 +1,434 @@
 <resources>
     <string name="app_name">AirRater</string>
+
+    <string-array name="Airlines">
+        <item>ABX Air</item>
+        <item>Adria Airways</item>
+        <item>Aegean Airlines</item>
+        <item>Aer Arann</item>
+        <item>Aer Lingus</item>
+        <item>Aeroflot Russian Airlines</item>
+        <item>Aeroflot-Don</item>
+        <item>Aerogaviota</item>
+        <item>Aerolineas Argentinas</item>
+        <item>Aerolineas Argentinas operated by Austral</item>
+        <item>Aeromexico</item>
+        <item>Aeromexico operated by Aeromexico Connect</item>
+        <item>Aerosvit Airlines</item>
+        <item>Aerounion</item>
+        <item>Africa West</item>
+        <item>Afriqiyah Airways</item>
+        <item>Air Algerie</item>
+        <item>Air Armenia</item>
+        <item>Air Astana</item>
+        <item>Air Baltic</item>
+        <item>Air Berlin</item>
+        <item>Air Botswana</item>
+        <item>Air Caledonie International</item>
+        <item>Air Canada</item>
+        <item>Air Canada operated by Air Canada Jazz</item>
+        <item>Air Canada operated by Central Mountain Air</item>
+        <item>Air Caraibes</item>
+        <item>Air China</item>
+        <item>Air Comet</item>
+        <item>Air Company SCAT</item>
+        <item>Air Dolomiti</item>
+        <item>Air Europa</item>
+        <item>Air France</item>
+        <item>Air France operated by Brit Air</item>
+        <item>Air France operated by Ccm Airlines</item>
+        <item>Air France operated by City Jet</item>
+        <item>Air France operated by Regional Compagnie Aerienne Europeene</item>
+        <item>Air Greenland</item>
+        <item>Air India</item>
+        <item>Air Italy</item>
+        <item>Air Ivoire</item>
+        <item>Air Jamaica</item>
+        <item>Air Koryo</item>
+        <item>Air Labrador</item>
+        <item>Air Macau - Cargo</item>
+        <item>Air Madagascar</item>
+        <item>Air Malawi</item>
+        <item>Air Mauritius</item>
+        <item>Air New Zealand</item>
+        <item>Air New Zealand operated by Air New Zealand Link</item>
+        <item>Air Niugini</item>
+        <item>Air One</item>
+        <item>Air One operated by Air One CityLiner</item>
+        <item>Air One operated by Transwede</item>
+        <item>Air Pacific</item>
+        <item>Air Rarotonga</item>
+        <item>Air Saint-Pierre</item>
+        <item>Air Transat</item>
+        <item>Airlinair</item>
+        <item>Airlines Of Kuban</item>
+        <item>Airtran Airways</item>
+        <item>Alaska Airlines</item>
+        <item>Alaska Airlines operated by Horizon Air</item>
+        <item>Alaska Central Express</item>
+        <item>Albanian Airlines</item>
+        <item>Alexandria Airlines</item>
+        <item>Alitalia</item>
+        <item>Alitalia operated by Air One</item>
+        <item>Alitalia operated by Alitalia Express</item>
+        <item>All Nippon Airways</item>
+        <item>All Nippon Airways operated by Air Central</item>
+        <item>All Nippon Airways operated by Air Japan</item>
+        <item>All Nippon Airways operated by Air Next</item>
+        <item>All Nippon Airways operated by Air Nippon Network</item>
+        <item>All Nippon Airways operated by Hokkaido International Airlines</item>
+        <item>All Nippon Airways operated by Ibex Airlines</item>
+        <item>All Nippon Airways operated by Skynet Asia Airways</item>
+        <item>All Nippon Airways operated by Star Flyer</item>
+        <item>Allegiant Airlines</item>
+        <item>Alpine Aviation</item>
+        <item>American Airlines</item>
+        <item>American Airlines operated by American Eagle</item>
+        <item>American Airlines operated by Chautauqua Airlines</item>
+        <item>American Airlines operated by Executive Airlines</item>
+        <item>American Airlines operated by Trans States Airlines</item>
+        <item>Amerijet International</item>
+        <item>Ariana Afghan Airlines</item>
+        <item>Arik Air</item>
+        <item>Arkia - Israeli Airlines</item>
+        <item>Arrow Air</item>
+        <item>Asian Spirit</item>
+        <item>Asiana Airlines</item>
+        <item>Atlantic Airways Faroe Islands</item>
+        <item>Atlant-Soyuz</item>
+        <item>Aurigny Air Services</item>
+        <item>Australian Air Express</item>
+        <item>Austrian Airlines</item>
+        <item>Austrian Airlines operated by Lauda Air</item>
+        <item>Austrian Airlines operated by Tyrolean Airways</item>
+        <item>Aviacon Zitotrans</item>
+        <item>Avianca</item>
+        <item>Avianca operated by Oceanair</item>
+        <item>Avianca operated by SAM - Sociedad Aeronautica De Medellin</item>
+        <item>Avior Airlines</item>
+        <item>Avitrans Nordic</item>
+        <item>Bahamasair</item>
+        <item>Bahrain Air</item>
+        <item>Bangkok Airways</item>
+        <item>Belavia</item>
+        <item>Belle Air</item>
+        <item>BH Airlines</item>
+        <item>Biman Bangladesh Airlines</item>
+        <item>Binter Canarias</item>
+        <item>Blue Air</item>
+        <item>Blue Islands</item>
+        <item>Blue1</item>
+        <item>bmi British Midland</item>
+        <item>bmi British Midland operated by bmi Regional</item>
+        <item>bmibaby</item>
+        <item>British Airways</item>
+        <item>British Airways operated by BA Cityflyer</item>
+        <item>British Airways operated by Comair</item>
+        <item>Brussels Airlines</item>
+        <item>Buraq Air</item>
+        <item>Calm Air Intl</item>
+        <item>CargoItalia</item>
+        <item>Cargojet Airways</item>
+        <item>Cargolux Airlines International</item>
+        <item>Caribbean Airlines</item>
+        <item>Carpatair</item>
+        <item>Caspian Airlines</item>
+        <item>Cathay Pacific Airways</item>
+        <item>Cebu Pacific Air</item>
+        <item>Central Mountain Air</item>
+        <item>Centre-Avia Airlines</item>
+        <item>Centurion Air Cargo</item>
+        <item>China Airlines</item>
+        <item>China Cargo Airlines</item>
+        <item>China Eastern Airlines</item>
+        <item>China Express Airlines</item>
+        <item>China Southern Airlines</item>
+        <item>China United Airlines</item>
+        <item>Cielos Del Peru</item>
+        <item>Cimber Air</item>
+        <item>City Airline</item>
+        <item>Comair operated by Kulula</item>
+        <item>Condor Flugdienst</item>
+        <item>Continental Airlines</item>
+        <item>Continental Airlines operated by Chautauqua Airlines</item>
+        <item>Continental Airlines operated by Colgan Air</item>
+        <item>Continental Airlines operated by Commutair</item>
+        <item>Continental Airlines operated by Continental Micronesia</item>
+        <item>Continental Airlines operated by Expressjet Airlines</item>
+        <item>Continental Airlines operated by Gulfstream International Airlines</item>
+        <item>Convia</item>
+        <item>Copa Airlines</item>
+        <item>Copa Airlines operated by Aerorepublica</item>
+        <item>Croatia Airlines</item>
+        <item>Cubana</item>
+        <item>Cyprus Airways</item>
+        <item>Czech Airlines</item>
+        <item>Danish Air Transport</item>
+        <item>Darwin Airline</item>
+        <item>Delta Air Lines</item>
+        <item>Delta Air Lines operated by Atlantic Southeast</item>
+        <item>Delta Air Lines operated by Chautauqua Airlines</item>
+        <item>Delta Air Lines operated by Comair</item>
+        <item>Delta Air Lines operated by Freedom Airlines</item>
+        <item>Delta Air Lines operated by Shuttle America</item>
+        <item>Delta Air Lines operated by SkyWest Airlines</item>
+        <item>Donbasero Airlines</item>
+        <item>Dragonair</item>
+        <item>Dutch Antilles Express</item>
+        <item>East African Safari Air Express</item>
+        <item>Eastern Airways</item>
+        <item>Easyjet</item>
+        <item>Easyjet Switzerland</item>
+        <item>Edelweiss Air</item>
+        <item>Egyptair</item>
+        <item>El Al Israel Airlines</item>
+        <item>Emirates</item>
+        <item>Era Aviation</item>
+        <item>Estonian Air</item>
+        <item>Ethiopian Airlines</item>
+        <item>Etihad Airways</item>
+        <item>Eva Airways</item>
+        <item>Evergreen International Airlines</item>
+        <item>Falcon Express</item>
+        <item>Finnair</item>
+        <item>Finnair operated by Finncomm Airlines</item>
+        <item>Finncomm Airlines</item>
+        <item>Firefly</item>
+        <item>Firefly operated by Finncomm Airlines</item>
+        <item>Flybaboo</item>
+        <item>Flybe</item>
+        <item>Frontier Airlines</item>
+        <item>Frontier Airlines operated by Lynx Aviation</item>
+        <item>Frontier Flying Service</item>
+        <item>Garuda Indonesia</item>
+        <item>Gazpromavia</item>
+        <item>Germanwings</item>
+        <item>Go Air</item>
+        <item>Gojet Airlines</item>
+        <item>Gol Transportes Aereos</item>
+        <item>Golden Air Flyg</item>
+        <item>Great Lakes Airlines</item>
+        <item>Gulfstream International Airlines</item>
+        <item>Hainan Airlines</item>
+        <item>Hawaiian Airlines</item>
+        <item>Hokkaido International Airlines</item>
+        <item>Iberia</item>
+        <item>Iberia operated by Air Nostrum</item>
+        <item>Iberia operated by Cygnus Air</item>
+        <item>Iberia operated by Denim Air</item>
+        <item>Iberia operated by Gestair</item>
+        <item>Icelandair</item>
+        <item>Icelandair - Cargo</item>
+        <item>Indian Airlines</item>
+        <item>Indigo Air</item>
+        <item>Indonesia Airasia</item>
+        <item>Interavia Airlines</item>
+        <item>Interjet</item>
+        <item>Intersky</item>
+        <item>Iran Air</item>
+        <item>Iran Aseman Airlines</item>
+        <item>Israir</item>
+        <item>JAL Express</item>
+        <item>JALways</item>
+        <item>JALways operated by Japan Airlines International</item>
+        <item>Japan Airlines International</item>
+        <item>Japan Airlines International - Cargo</item>
+        <item>Japan Airlines International operated by J-Air</item>
+        <item>Japan Airlines International operated by JAL Express</item>
+        <item>Japan Airlines International operated by JALways</item>
+        <item>Japan Airlines International operated by Japan Transocean Air</item>
+        <item>Japan Transocean Air</item>
+        <item>Jat Airways</item>
+        <item>Jeju Airlines</item>
+        <item>Jet Airways India</item>
+        <item>Jet Lite</item>
+        <item>Jetblue Airways</item>
+        <item>Jetstar Airways</item>
+        <item>Jin Air</item>
+        <item>Kingfisher Airlines</item>
+        <item>Kish Air</item>
+        <item>KLM-Royal Dutch Airlines</item>
+        <item>KLM-Royal Dutch Airlines operated by KLM Cityhopper</item>
+        <item>Korean Air</item>
+        <item>Kuwait Airways</item>
+        <item>Kyrgyzstan</item>
+        <item>Lan Airlines</item>
+        <item>Lan Airlines operated by Lan Argentina</item>
+        <item>Lan Airlines operated by LAN Ecuador</item>
+        <item>Lan Airlines operated by Lan Express</item>
+        <item>Lan Airlines operated by Lan Peru</item>
+        <item>LAN Ecuador</item>
+        <item>Lan Peru</item>
+        <item>Libyan Airlines</item>
+        <item>Lion Air</item>
+        <item>LOT Polish Airlines</item>
+        <item>LOT Polish Airlines operated by Eurolot</item>
+        <item>Lufthansa German Airlines</item>
+        <item>Lufthansa German Airlines operated by Air Dolomiti</item>
+        <item>Lufthansa German Airlines operated by Augsburg Airways</item>
+        <item>Lufthansa German Airlines operated by Cirrus Airlines</item>
+        <item>Lufthansa German Airlines operated by Contact Air</item>
+        <item>Lufthansa German Airlines operated by Eurowings</item>
+        <item>Lufthansa German Airlines operated by Lufthansa Cityline</item>
+        <item>Luxair</item>
+        <item>Mahan Air</item>
+        <item>Malaysia Airlines</item>
+        <item>Malaysia Airlines operated by MASWings</item>
+        <item>Malev Hungarian Airlines</item>
+        <item>Malmo Aviation</item>
+        <item>Mandarin Airlines</item>
+        <item>Martinair Holland</item>
+        <item>MAT - Macedonian Airlines</item>
+        <item>Meridiana</item>
+        <item>Merpati Nusantara Airlines</item>
+        <item>Mesa Airlines operated by go!</item>
+        <item>Mexicana De Aviacion</item>
+        <item>Mexicana De Aviacion operated by Click Grupo Mexicana</item>
+        <item>Mexicana De Aviacion operated by Transportes Aeromar De C.V.</item>
+        <item>Miat - Mongolian Airlines</item>
+        <item>Middle East Airlines</item>
+        <item>Midwest Airlines</item>
+        <item>Midwest Airlines operated by Republic Airline</item>
+        <item>Moldavian Airlines</item>
+        <item>Monarch Airlines</item>
+        <item>Montenegro Airlines</item>
+        <item>MyAir.com</item>
+        <item>Myanma Airways</item>
+        <item>National Jet System</item>
+        <item>NextJet</item>
+        <item>Northwest Airlines</item>
+        <item>Northwest Airlines operated by Compass Airlines</item>
+        <item>Northwest Airlines operated by Mesaba Airlines</item>
+        <item>Northwest Airlines operated by Pinnacle Airlines</item>
+        <item>Norwegian Air Shuttle</item>
+        <item>Oceanair</item>
+        <item>Oceanair operated by Avianca</item>
+        <item>Olt Ostfriesische Lufttransport</item>
+        <item>Olympic Airlines</item>
+        <item>Oman Air</item>
+        <item>Orenair</item>
+        <item>Overland Airways</item>
+        <item>Pacific Coastal Airlines Limited</item>
+        <item>Pakistan International Airlines</item>
+        <item>Paramount Airways</item>
+        <item>Penair</item>
+        <item>Philippine Airlines</item>
+        <item>Precisionair</item>
+        <item>Private Wings</item>
+        <item>Qantas Airways</item>
+        <item>Qantas Airways operated by Airlink</item>
+        <item>Qantas Airways operated by Eastern Australia Airlines</item>
+        <item>Qantas Airways operated by Jet Connect</item>
+        <item>Qantas Airways operated by Sunstate Airlines</item>
+        <item>Qatar Airways</item>
+        <item>Regional Air Lines</item>
+        <item>Regional Express</item>
+        <item>Rossiya - Russian Airlines</item>
+        <item>Royal Air Maroc</item>
+        <item>Royal Jordanian</item>
+        <item>Ryanair</item>
+        <item>S7 Airlines</item>
+        <item>Santa Barbara Airlines</item>
+        <item>Saratov Airlines</item>
+        <item>SATA International</item>
+        <item>Saudi Arabian Airlines</item>
+        <item>Scandinavian Airlines</item>
+        <item>Scandinavian Airlines operated by Atlantic Airways Faroe Islands</item>
+        <item>Scandinavian Airlines operated by Cimber Air</item>
+        <item>Scandinavian Airlines operated by SAS Norway</item>
+        <item>Scandinavian Airlines operated by Transwede</item>
+        <item>Severstal Aircompany</item>
+        <item>Shandong Airlines</item>
+        <item>Shanghai Airlines Cargo International</item>
+        <item>Shenzhen Airlines</item>
+        <item>Sichuan Airlines</item>
+        <item>Silk Air</item>
+        <item>Silk Way Airlines</item>
+        <item>Singapore Airlines</item>
+        <item>Sky Bahamas</item>
+        <item>Sky Europe</item>
+        <item>Sky Express</item>
+        <item>Skymark Airlines</item>
+        <item>Skywest Airlines</item>
+        <item>South African Airways</item>
+        <item>South African Airways - Cargo</item>
+        <item>South African Airways operated by South African Airlink</item>
+        <item>South African Airways operated by South African Express Airways</item>
+        <item>Southwest Airlines</item>
+        <item>Spanair</item>
+        <item>Spirit Airlines</item>
+        <item>Srilankan Airlines</item>
+        <item>Star Flyer</item>
+        <item>Sudan Airways</item>
+        <item>Surinam Airways</item>
+        <item>Swiss</item>
+        <item>Swiss operated by Contact Air</item>
+        <item>Swiss operated by Helvetic Airways</item>
+        <item>Syrian Arab Airlines</item>
+        <item>Taca International Airlines</item>
+        <item>Taca International Airlines operated by Trans American Airlines dba Taca Peru</item>
+        <item>Tacv Cabo Verde Airlines</item>
+        <item>Tajikistan Airlines</item>
+        <item>TAM Linhas Aereas</item>
+        <item>TAM Linhas Aereas operated by Passaredo Transportes Aereos</item>
+        <item>TAM Linhas Aereas operated by TRIP Linhas Aereas</item>
+        <item>TAME Linea Aerea Del Ecuador</item>
+        <item>TAP Air Portugal</item>
+        <item>Tarom</item>
+        <item>Tatarstan</item>
+        <item>Thai AirAsia</item>
+        <item>Thai Airways International</item>
+        <item>TNT Airways</item>
+        <item>Toumai Air Tchad</item>
+        <item>Transaero</item>
+        <item>TransAsia Airways</item>
+        <item>Transportes Aeromar De C.V.</item>
+        <item>Tulpar Avia Service</item>
+        <item>Tunis Air</item>
+        <item>Turkish Airlines</item>
+        <item>Turkish Airlines operated by AnadoluJet</item>
+        <item>Twin Jet</item>
+        <item>Ukraine International Airlines</item>
+        <item>Uni Airways</item>
+        <item>United Airlines</item>
+        <item>United Airlines operated by Chautauqua Airlines</item>
+        <item>United Airlines operated by Colgan Air</item>
+        <item>United Airlines operated by Gojet Airlines</item>
+        <item>United Airlines operated by Mesa Airlines</item>
+        <item>United Airlines operated by Shuttle America</item>
+        <item>United Airlines operated by SkyWest Airlines</item>
+        <item>United Airlines operated by Trans States Airlines</item>
+        <item>Ural Airlines</item>
+        <item>US Airways</item>
+        <item>US Airways operated by Air Wisconsin</item>
+        <item>US Airways operated by Chautauqua Airlines</item>
+        <item>US Airways operated by Colgan Air</item>
+        <item>US Airways operated by Mesa Airlines</item>
+        <item>US Airways operated by Piedmont Airlines</item>
+        <item>US Airways operated by PSA Airlines</item>
+        <item>US Airways operated by Republic Airline</item>
+        <item>US Airways operated by Trans States Airlines</item>
+        <item>Utair Aviation</item>
+        <item>Utair-Express</item>
+        <item>Uzbekistan Airways</item>
+        <item>Varig Logistica</item>
+        <item>Vietnam Airlines</item>
+        <item>Viking Airlines</item>
+        <item>Vincent Aviation</item>
+        <item>Virgin Atlantic Airways</item>
+        <item>Virgin Blue</item>
+        <item>Virgin Blue operated by Pacific Blue International</item>
+        <item>Virgin Blue operated by Polynesian Blue</item>
+        <item>Virgin Nigeria</item>
+        <item>Vladivostok Air</item>
+        <item>Volaris</item>
+        <item>Wasaya Airways</item>
+        <item>Westjet</item>
+        <item>Wideroes Flyveselskap</item>
+        <item>Wind Jet</item>
+        <item>Xiamen Airlines Mpany</item>
+        <item>Yakutia</item>
+        <item>Yamal Airlines</item>
+        <item>Yemenia Yemen Airways</item>
+    </string-array>
 </resources>

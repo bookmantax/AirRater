@@ -15,11 +15,13 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 public class MainActivity extends AppCompatActivity implements AHBottomNavigation.OnTabSelectedListener
 {
     private AHBottomNavigation bottomBar;
+    private boolean startUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        startUp = true;
 
         bottomBar = (AHBottomNavigation)findViewById(R.id.mainNavBar);
         bottomBar.setOnTabSelectedListener(this);
@@ -47,30 +49,41 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     @Override
     public void onTabSelected(int position, boolean wasSelected)
     {
-        if(position == 0)
+        if(position == 0 && (startUp || !wasSelected))
         {
+            startUp = false;
             SearchFragment searchFragment = new SearchFragment();
             getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, searchFragment).commit();
         }
-        else if(position == 1)
+        else if(position == 1 && !wasSelected)
         {
             UsersFragment usersFragment = new UsersFragment();
             getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, usersFragment).commit();
         }
-        else if(position == 2)
+        else if(position == 2 && !wasSelected)
         {
             CheckInFragment checkInFragment = new CheckInFragment();
             getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, checkInFragment).commit();
         }
-        else if(position == 3)
+        else if(position == 3 && !wasSelected)
         {
             RatingFragment ratingFragment = new RatingFragment();
             getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, ratingFragment).commit();
         }
-        else if(position == 4)
+        else if(position == 4 && !wasSelected)
         {
             ProfileFragment profileFragment = new ProfileFragment();
             getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, profileFragment).commit();
         }
+    }
+
+    public void SetStartUp(boolean bool)
+    {
+        startUp = bool;
+    }
+
+    public void SetCurrentTab(int pos)
+    {
+        bottomBar.setCurrentItem(pos);
     }
 }

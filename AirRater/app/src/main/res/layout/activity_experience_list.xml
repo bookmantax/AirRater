@@ -8,7 +8,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Experience List"
-        android:id="@+id/textView22"
+        android:id="@+id/experienceListCityTextView"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
@@ -16,7 +16,16 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/experienceExpandableListView"
-        android:layout_below="@+id/textView22"
+        android:layout_below="@+id/experienceListCityTextView"
+        android:layout_above="@+id/experienceListNavBar"
         android:layout_centerHorizontal="true"
         android:focusable="true" />
+
+    <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/experienceListNavBar"
+        android:layout_alignParentBottom="true"
+        >
+    </com.aurelhubert.ahbottomnavigation.AHBottomNavigation>
 </RelativeLayout>

@@ -9,10 +9,10 @@ public class ExperienceDetails {
     public String employeeLastname;
     public String employeeAirline;
     public String comments;
-    public int numStars;
+    public Double numStars;
 
     public ExperienceDetails(String employeeFirstName, String employeeLastname, String employeeAirline,
-                             String comments, int numStars)
+                             String comments, Double numStars)
     {
         this.employeeFirstName = employeeFirstName;
         this.employeeLastname = employeeLastname;

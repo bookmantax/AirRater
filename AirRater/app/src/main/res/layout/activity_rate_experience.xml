@@ -26,7 +26,7 @@
         android:layout_marginBottom="25dp" />
 
     <fragment
-        android:id="@+id/searchCityEditText"
+        android:id="@+id/ratingCityEditText"
         android:layout_alignBottom="@+id/textView12"
         android:layout_toRightOf="@+id/textView12"
         android:layout_centerHorizontal="true"
@@ -60,35 +60,13 @@
         android:layout_alignBottom="@+id/textView13"
         android:spinnerMode="dropdown" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="SubType:"
-        android:id="@+id/textView14"
-        android:layout_below="@+id/textView13"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="25dp" />
-
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/subTypeSpinner"
-        android:layout_alignBottom="@+id/textView14"
-        android:layout_toRightOf="@+id/textView14"
-        android:layout_alignRight="@+id/typeSpinner"
-        android:layout_alignEnd="@+id/typeSpinner"
-        android:layout_below="@+id/typeSpinner"
-        android:spinnerMode="dropdown" />
-
     <Button
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:text="Submit"
-        android:id="@+id/submitButton"
+        android:id="@+id/ratingSubmitButton"
         android:onClick="Submit"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/ratingNavBar"
         android:layout_centerHorizontal="true" />
 
     <TextView
@@ -97,13 +75,13 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Name:"
         android:id="@+id/textView15"
-        android:layout_below="@+id/textView14"
+        android:layout_below="@+id/textView13"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="25dp" />
 
     <fragment
-        android:id="@+id/nameEditText"
+        android:id="@+id/ratingNameEditText"
         android:layout_alignBottom="@+id/textView15"
         android:layout_toRightOf="@+id/textView15"
         android:layout_centerHorizontal="true"
@@ -149,11 +127,11 @@
         android:layout_width="fill_parent"
         android:layout_height="200dp"
         android:id="@+id/commentsEditText"
+        android:gravity="top"
         android:layout_below="@+id/textView17"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:singleLine="false"
-        android:layout_above="@+id/submitButton" />
+        android:layout_above="@+id/ratingSubmitButton" />
 
     <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
         android:layout_width="match_parent"

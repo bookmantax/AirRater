@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 /**
  * Created by Brandon on 9/28/2016.
  */
@@ -16,10 +18,10 @@ public class UserAdapter extends ArrayAdapter<UserItem> {
     UserHolder holder;
     Context context;
     int layoutResourceId;
-    UserItem data[] = null;
+    ArrayList<UserItem> data = null;
     UserItem user;
 
-    public UserAdapter(Context context, int layoutResourceId, UserItem[] data)
+    public UserAdapter(Context context, int layoutResourceId, ArrayList<UserItem> data)
     {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
@@ -50,7 +52,7 @@ public class UserAdapter extends ArrayAdapter<UserItem> {
             holder = (UserHolder)row.getTag();
         }
 
-        user = data[position];
+        user = data.get(position);
 
         holder.txtBusinessName.setText(user.businessName);
         holder.txtAirlineName.setText(user.airline);

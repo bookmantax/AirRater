@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -20,7 +21,7 @@ import org.json.JSONObject;
 /**
  * Created by Brandon on 9/26/2016.
  */
-public class LoginActivity extends ActionBarActivity
+public class LoginActivity extends AppCompatActivity
 {
     String username, password;
     EditText usernameEditText,passwordEditText;
@@ -85,6 +86,7 @@ public class LoginActivity extends ActionBarActivity
                                     editor.putString("Airline", oneObject.getString("Airline"));
                                     editor.putString("Username", oneObject.getString("Username"));
                                     editor.putString("Password", oneObject.getString("Password"));
+                                    editor.commit();
 
                                 } catch (JSONException e) {
                                     // Oops
@@ -93,7 +95,7 @@ public class LoginActivity extends ActionBarActivity
                                 e.printStackTrace();
                             }
                             //Send user to search page.
-                            Intent activity = new Intent(LoginActivity.this, SearchExperienceActivity.class);
+                            Intent activity = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(activity);
                         }
                     }
@@ -123,7 +125,6 @@ public class LoginActivity extends ActionBarActivity
 
     public void ForgotPassword(View view)
     {
-        //TODO
-        //implement mail chimp to send password.
+        //TODO implement mail chimp to send password.
     }
 }

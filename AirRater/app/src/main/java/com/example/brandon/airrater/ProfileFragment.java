@@ -1,5 +1,7 @@
 package com.example.brandon.airrater;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -7,8 +9,14 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 
 import org.json.JSONObject;
 
@@ -18,9 +26,12 @@ import org.json.JSONObject;
 
 public class ProfileFragment extends android.support.v4.app.Fragment
 {
-    private EditText profileFirstNameEditText, profileLastNameEditText, profileAirlineEditText,
+    private EditText profileFirstNameEditText, profileLastNameEditText,
             profileEmailEditText;
+    private AutoCompleteTextView profileAirlineEditText;
+    private ArrayAdapter<String> adapter;
     private TextView profileResponseTextView;
+    private Button profileSubmitButton;
     private String firstName, lastName, airline, emailAddress;
     SharedPreferences settings;
     SharedPreferences.Editor editor;
@@ -28,11 +39,27 @@ public class ProfileFragment extends android.support.v4.app.Fragment
     private String storedLastName;
     private String storedAirline;
     private String storedEmail;
+    private Activity mActivity;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof Activity){
+            mActivity = (Activity) context;
+        }
+
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        settings = getContext().getSharedPreferences("UserPreferences", 0);
+        settings = mActivity.getSharedPreferences("UserPreferences", 0);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
     }
 
     @Nullable
@@ -41,28 +68,40 @@ public class ProfileFragment extends android.support.v4.app.Fragment
         View rootView = inflater.inflate(R.layout.activity_profile, container, false);
 
         storedFirstName = settings.getString("FirstName", "");
-        storedLastName = settings.getString("LastName", "");
+        storedLastName = settings.getString("Lastname", "");
         storedAirline = settings.getString("Airline", "");
         storedEmail = settings.getString("EmailAddress", "");
 
-        profileResponseTextView = (TextView)getActivity().findViewById(R.id.profileResponseTextView);
+        profileResponseTextView = (TextView)rootView.findViewById(R.id.profileResponseTextView);
 
-        profileFirstNameEditText = (EditText)getActivity().findViewById(R.id.profileFirstNameEditText);
+        profileFirstNameEditText = (EditText)rootView.findViewById(R.id.profileFirstNameEditText);
         profileFirstNameEditText.setText(storedFirstName);
 
-        profileLastNameEditText = (EditText)getActivity().findViewById(R.id.profileLastNameEditText);
+        profileLastNameEditText = (EditText)rootView.findViewById(R.id.profileLastNameEditText);
         profileLastNameEditText.setText(storedLastName);
 
-        profileAirlineEditText = (EditText)getActivity().findViewById(R.id.profileAirlineEditText);
+        String[] airlines = getResources().getStringArray(R.array.Airlines);
+        adapter = new ArrayAdapter<String>(mActivity, android.R.layout.simple_list_item_1, airlines);
+        profileAirlineEditText = (AutoCompleteTextView) rootView.findViewById(R.id.profileAirlineEditText);
+        profileAirlineEditText.setAdapter(adapter);
+        profileAirlineEditText.setThreshold(1);
         profileAirlineEditText.setText(storedAirline);
 
-        profileEmailEditText = (EditText)getActivity().findViewById(R.id.profileEmailEditText);
+        profileEmailEditText = (EditText)rootView.findViewById(R.id.profileEmailEditText);
         profileEmailEditText.setText(storedEmail);
+
+        profileSubmitButton = (Button)rootView.findViewById(R.id.profileSubmitButton);
+        profileSubmitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Submit();
+            }
+        });
 
         return rootView;
     }
 
-    public void Submit(View view)
+    public void Submit()
     {
         editor = settings.edit();
         firstName = String.valueOf(profileFirstNameEditText.getText());
@@ -89,20 +128,28 @@ public class ProfileFragment extends android.support.v4.app.Fragment
                         //responder.uploadFinished(result != null);
                         super.onPostExecute(result, notes);
                         String s = result;
-                        if(s.equalsIgnoreCase("No Change"))
+                        if(s != null)
                         {
-                            profileResponseTextView.setText("No changes were made.");
-                            profileResponseTextView.setTextColor(Color.RED);
-                        }
-                        else if(s.equalsIgnoreCase("Missing Information"))
-                        {
-                            profileResponseTextView.setText("Something went wrong please try again.");
-                            profileResponseTextView.setTextColor(Color.RED);
+                            if (s.equalsIgnoreCase("No Change")) {
+                                profileResponseTextView.setText("No changes were made.");
+                                profileResponseTextView.setTextColor(Color.RED);
+                            } else if (s.equalsIgnoreCase("Missing Information")) {
+                                profileResponseTextView.setText("Something went wrong please try again.");
+                                profileResponseTextView.setTextColor(Color.RED);
+                            } else if (s.equalsIgnoreCase("Success"))
+                            {
+                                profileResponseTextView.setText("Saved.");
+                                profileResponseTextView.setTextColor(Color.GREEN);
+                            }
                         }
                         else
                         {
-                            profileResponseTextView.setText("Saved.");
-                            profileResponseTextView.setTextColor(Color.GREEN);
+                            Context context = getContext();
+                            CharSequence text = "The connection timed out, please try again.";
+                            int duration = Toast.LENGTH_SHORT;
+
+                            Toast toast = Toast.makeText(context, text, duration);
+                            toast.show();
                         }
                     }
                 }).start();
@@ -120,26 +167,27 @@ public class ProfileFragment extends android.support.v4.app.Fragment
     private boolean IsInfoChanged(String fName, String lName, String airline, String emailAddress)
     {
         boolean changed = false;
-        if(firstName != null && firstName != "" && firstName != storedFirstName)
+        if(fName != null && !fName.equalsIgnoreCase(storedFirstName))
         {
-            editor.putString("FirstName", firstName);
+            editor.putString("FirstName", fName);
             changed = true;
         }
-        if(lastName != null && lastName != "" && lastName != storedLastName)
+        if(lName != null && !lName.equalsIgnoreCase(storedLastName))
         {
-            editor.putString("LastName", lastName);
+            editor.putString("Lastname", lName);
             changed = true;
         }
-        if(airline != null && airline != "" && airline != storedAirline)
+        if(airline != null && !airline.equalsIgnoreCase(storedAirline))
         {
             editor.putString("Airline", airline);
             changed = true;
         }
-        if(emailAddress != null && emailAddress != "" && emailAddress != storedEmail)
+        if(emailAddress != null && !emailAddress.equalsIgnoreCase(storedEmail))
         {
             editor.putString("EmailAddress", emailAddress);
             changed = true;
         }
+        editor.commit();
         return changed;
     }
 }

@@ -6,8 +6,12 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -20,13 +24,15 @@ import org.json.JSONObject;
 /**
  * Created by Brandon on 9/21/2016.
  */
-public class SignupActivity extends ActionBarActivity
+public class SignupActivity extends AppCompatActivity
 {
     String firstName, lastName, emailAddress, airline, username, password;
-    EditText firstEditText, lastEditText, emailEditText, airlineEditText, usernameEditText,
+    private ArrayAdapter<String> adapter;
+    EditText firstEditText, lastEditText, emailEditText, usernameEditText,
         passwordEditText;
+    AutoCompleteTextView airlineEditText;
     TextView signupResponseTextView;
-    Button createUserButton;
+    Button createUserButton, signupLoginButton;
     SharedPreferences settings;
     SharedPreferences.Editor editor;
 
@@ -35,11 +41,16 @@ public class SignupActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
+        String[] airlines = getResources().getStringArray(R.array.Airlines);
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, airlines);
+        airlineEditText = (AutoCompleteTextView) findViewById(R.id.airlineEditText);
+        airlineEditText.setAdapter(adapter);
+        airlineEditText.setThreshold(1);
+
         signupResponseTextView = (TextView)findViewById(R.id.signupResponseTextView);
         firstEditText = (EditText)findViewById(R.id.firstEditText);
         lastEditText = (EditText)findViewById(R.id.lastEditText);
         emailEditText = (EditText)findViewById(R.id.emailEditText);
-        airlineEditText = (EditText)findViewById(R.id.airlineEditText);
         usernameEditText = (EditText)findViewById(R.id.usernameEditText);
         passwordEditText = (EditText)findViewById(R.id.passwordEditText);
         createUserButton = (Button)findViewById(R.id.createAccountButton);
@@ -50,6 +61,12 @@ public class SignupActivity extends ActionBarActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
+    }
+
+    public void Login(View view)
+    {
+        Intent activity = new Intent(SignupActivity.this, LoginActivity.class);
+        startActivity(activity);
     }
 
     public void CreateUser(View view)
@@ -82,19 +99,17 @@ public class SignupActivity extends ActionBarActivity
                     {
                         super.onPostExecute(result, notes);
                         String s = result;
-                        if (s.equalsIgnoreCase("Missing Information")) {
+                        if (s != null && s.equalsIgnoreCase("Missing Information")) {
                             signupResponseTextView.setText("Something went wrong please try again.");
                             signupResponseTextView.setTextColor(Color.RED);
                         }
-                        else
+                        else if(s!= null)
                         {
                             //Store user info in Shared Preferences
                             settings = getSharedPreferences("UserPreferences", 0);
                             editor = settings.edit();
                             try {
-                                JSONArray jsonArray = new JSONArray(result);
-                                try {
-                                    JSONObject oneObject = jsonArray.getJSONObject(0);
+                                    JSONObject oneObject = new JSONObject(result);
                                     // Pulling items from the array
                                     editor.putInt("UserId", Integer.valueOf(oneObject.getString("UserId")));
                                     editor.putString("FirstName", oneObject.getString("FirstName"));
@@ -103,16 +118,13 @@ public class SignupActivity extends ActionBarActivity
                                     editor.putString("Airline", oneObject.getString("Airline"));
                                     editor.putString("Username", oneObject.getString("Username"));
                                     editor.putString("Password", oneObject.getString("Password"));
+                                    editor.commit();
 
-                                } catch (JSONException e) {
-                                    // Oops
-                                }
-                            }
-                            catch (JSONException e) {
-                                e.printStackTrace();
+                            } catch (JSONException e) {
+                                // Oops
                             }
                             //Send user to search page.
-                            Intent activity = new Intent(SignupActivity.this, SearchExperienceActivity.class);
+                            Intent activity = new Intent(SignupActivity.this, MainActivity.class);
                             startActivity(activity);
                         }
                     }

@@ -22,7 +22,8 @@
         android:scaleX="0.5"
         android:scaleY="0.5"
         android:transformPivotX="0dp"
-        android:layout_alignStart="@+id/employeeNameTextView" />
+        android:layout_alignStart="@+id/employeeNameTextView"
+        android:isIndicator="true" />
 
     <TextView
         android:layout_width="wrap_content"

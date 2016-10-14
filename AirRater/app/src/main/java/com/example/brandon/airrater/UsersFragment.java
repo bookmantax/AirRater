@@ -13,9 +13,11 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.AutocompleteFilter;
@@ -29,6 +31,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -42,7 +45,7 @@ public class UsersFragment extends android.support.v4.app.Fragment
     private TextView findUsersResponseTextView;
     private ListView findUsersListView;
     private String location, city, country;
-    private UserItem items[];
+    private ArrayList<UserItem> items = new ArrayList<>();
     private UserAdapter adapter;
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
@@ -62,9 +65,19 @@ public class UsersFragment extends android.support.v4.app.Fragment
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        autocompleteFragmentLocation = (PlaceAutocompleteFragment)
+                mActivity.getFragmentManager().findFragmentById(R.id.findUsersLocationEditText);
+        if (autocompleteFragmentLocation != null)
+            mActivity.getFragmentManager().beginTransaction().remove(autocompleteFragmentLocation).commit();
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        settings = getContext().getSharedPreferences("UserPreferences", 0);
+        settings = mActivity.getSharedPreferences("UserPreferences", 0);
+        editor = settings.edit();
         location = settings.getString("Location", "");
         SearchOnStart();
     }
@@ -85,38 +98,50 @@ public class UsersFragment extends android.support.v4.app.Fragment
         autocompleteFragmentLocation.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                // TODO: Get info about the selected place.
                 geocoder = new Geocoder(rootView.getContext(), Locale.getDefault());
                 latLng = place.getLatLng();
                 try {
                     addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
                 } catch (Exception e){}
-                if(addresses != null && addresses.size() > 0)
+                if (addresses != null && addresses.size() > 0)
                 {
-                    city = addresses.get(0).getAddressLine(1);
-                    country = addresses.get(0).getAddressLine(2);
-                    if(city != null && country != null)
+                    city = addresses.get(0).getLocality();
+                    if(addresses.get(0).getCountryName().equalsIgnoreCase("United States"))
                     {
-                        location = city + ", " + country;
-                        editor.putString("Location", location);
+                        country = addresses.get(0).getAdminArea();
                     }
+                    else
+                    {
+                        country = addresses.get(0).getCountryName();
+                    }
+                    editor.putString("Location", city + ", " + country);
+                    editor.commit();
+                    location = city + ", " + country;
+                    autocompleteFragmentLocation.setText(location);
                 }
                 SearchSetAdapter();
             }
 
             @Override
             public void onError(Status status) {
-                // TODO: Handle the error.
+                Context context = getContext();
+                CharSequence text = "Something went wrong, please try again.";
+                int duration = Toast.LENGTH_SHORT;
 
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
             }
         });
 
         findUsersListView = (ListView)rootView.findViewById(R.id.findUsersListView);
         findUsersResponseTextView = (TextView)rootView.findViewById(R.id.findUsersResponseTextView);
 
-        if(items == null)
+        if(items == null || items.size() == 0)
         {
-            SearchSetAdapter();
+            if(settings.getString("Location", "") != "")
+            {
+                SearchSetAdapter();
+            }
         }
         else
         {
@@ -133,50 +158,61 @@ public class UsersFragment extends android.support.v4.app.Fragment
         {
             if(location != settings.getString("Location", ""))
             {
-                editor = settings.edit();
                 editor.putString("Location", location);
+                editor.commit();
             }
             try {
                 RequestParams params = new RequestParams();
                 JSONObject object = new JSONObject();
-                object.put("location", location);
                 params.put("data", object.toString());
 
-                new Thread(new AsyncDownload("http://192.168.0.19/WebServices/Bin/FindUsers.ashx",
+                new Thread(new AsyncDownload("http://192.168.0.19/WebServices/Bin/FindUsers.ashx?location=" + location.replace(" ", "%20"),
                         params, false, null) {
                     @Override
                     protected void onPostExecute(String result, Object notes) {
                         //responder.uploadFinished(result != null);
                         super.onPostExecute(result, notes);
-                        if(result.equalsIgnoreCase("Missing Information"))
+                        if(result != null)
                         {
-                            findUsersResponseTextView.setText("Something went wrong please try again.");
-                            findUsersResponseTextView.setTextColor(Color.RED);
-                        }
-                        else if(result.equalsIgnoreCase("User not found"))
-                        {
-                            items = new UserItem[1];
-                            items[0] = new UserItem("No Users Found", "", "");
-                            adapter = new UserAdapter(getContext(), R.layout.user_item, items);
-                            findUsersListView.setAdapter(adapter);
-                            findUsersResponseTextView.setText("");
-                        }
-                        else
-                        {
-                            try {
-                                JSONArray jsonArray = new JSONArray(result);
-                                items = new UserItem[jsonArray.length()];
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    JSONObject oneObject = jsonArray.getJSONObject(i);
-                                    items[i] = new UserItem(oneObject.getString("firstName") + " " + oneObject.getString("lastName"),
-                                            oneObject.getString("businessName"), oneObject.getString("airline"));
-                                }
+                            if (result.equalsIgnoreCase("Missing Information"))
+                            {
+                                findUsersResponseTextView.setText("Something went wrong please try again.");
+                                findUsersResponseTextView.setTextColor(Color.RED);
+                            }
+                            else if (result.equalsIgnoreCase("User not found") || result.equalsIgnoreCase("No Users Checked In"))
+                            {
+                                items.clear();
+                                items.add(new UserItem("No Users Found", "", ""));
                                 adapter = new UserAdapter(getContext(), R.layout.user_item, items);
                                 findUsersListView.setAdapter(adapter);
                                 findUsersResponseTextView.setText("");
-                            } catch (JSONException e) {
-                                e.printStackTrace();
                             }
+                            else
+                            {
+                                try {
+                                    JSONArray jsonArray = new JSONArray(result);
+                                    items.clear();
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        JSONObject oneObject = jsonArray.getJSONObject(i);
+                                        items.add(new UserItem(oneObject.getString("firstName") + " " + oneObject.getString("lastName"),
+                                                oneObject.getString("businessName"), oneObject.getString("airline")));
+                                    }
+                                    adapter = new UserAdapter(getContext(), R.layout.user_item, items);
+                                    findUsersListView.setAdapter(adapter);
+                                    findUsersResponseTextView.setText("");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Context context = getContext();
+                            CharSequence text = "The connection timed out, please try again.";
+                            int duration = Toast.LENGTH_SHORT;
+
+                            Toast toast = Toast.makeText(context, text, duration);
+                            toast.show();
                         }
                     }
                 }).start();
@@ -197,8 +233,8 @@ public class UsersFragment extends android.support.v4.app.Fragment
         {
             if(location != settings.getString("Location", ""))
             {
-                editor = settings.edit();
                 editor.putString("Location", location);
+                editor.commit();
             }
             try {
                 RequestParams params = new RequestParams();
@@ -206,30 +242,30 @@ public class UsersFragment extends android.support.v4.app.Fragment
                 object.put("location", location);
                 params.put("data", object.toString());
 
-                new Thread(new AsyncDownload("http://192.168.0.19/WebServices/Bin/FindUsers.ashx",
+                new Thread(new AsyncDownload("http://192.168.0.19/WebServices/Bin/FindUsers.ashx?location=" + location.replace(" ", "%20"),
                         params, false, null) {
                     @Override
                     protected void onPostExecute(String result, Object notes) {
                         //responder.uploadFinished(result != null);
                         super.onPostExecute(result, notes);
-                        if(result.equalsIgnoreCase("Missing Information"))
+                        if(result != null && result.equalsIgnoreCase("Missing Information"))
                         {
 
                         }
-                        else if(result.equalsIgnoreCase("User not found"))
+                        else if(result != null && result.equalsIgnoreCase("User not found") || result.equalsIgnoreCase("No Users Checked In"))
                         {
-                            items = new UserItem[1];
-                            items[0] = new UserItem("No Users Found", "", "");
+                            items.clear();
+                            items.add(new UserItem("No Users Found", "", ""));
                         }
-                        else
+                        else if(result != null)
                         {
                             try {
                                 JSONArray jsonArray = new JSONArray(result);
-                                items = new UserItem[jsonArray.length()];
+                                items.clear();
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     JSONObject oneObject = jsonArray.getJSONObject(i);
-                                    items[i] = new UserItem(oneObject.getString("firstName") + " " + oneObject.getString("lastName"),
-                                            oneObject.getString("businessName"), oneObject.getString("airline"));
+                                    items.add(new UserItem(oneObject.getString("firstName") + " " + oneObject.getString("lastName"),
+                                            oneObject.getString("businessName"), oneObject.getString("airline")));
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();

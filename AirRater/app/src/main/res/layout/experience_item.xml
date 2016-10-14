@@ -21,7 +21,8 @@
         android:id="@+id/experienceItemRatingBar"
         android:layout_below="@+id/businessNameText"
         android:layout_alignLeft="@+id/businessNameText"
-        android:layout_alignStart="@+id/businessNameText" />
+        android:layout_alignStart="@+id/businessNameText"
+        android:isIndicator="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -49,7 +50,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
-        android:id="@+id/numUsersText"
+        android:id="@+id/experienceItemNumUsersText"
         android:layout_alignBottom="@+id/textView23"
         android:layout_toRightOf="@+id/textView24"
         android:layout_toEndOf="@+id/textView24"

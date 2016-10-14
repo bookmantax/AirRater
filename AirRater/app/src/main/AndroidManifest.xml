@@ -12,14 +12,14 @@
         android:icon="@mipmap/ic_launcher"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
 
-        <activity
-            android:name=".SplashActivity"
-            android:label="@string/app_name">
-        </activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDLrnBfy2K6qOfbey7F6NOGmo7Hq18PcYc"/>
 
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name">
+            android:name=".SplashActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,47 +28,24 @@
         </activity>
 
         <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
             android:name=".SignupActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
 
         </activity>
 
         <activity
             android:name=".LoginActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
         </activity>
 
-        <activity
-            android:name=".RateExperienceActivity"
-            android:label="@string/app_name">
-        </activity>
-
-        <activity
-            android:name=".SearchExperienceActivity"
-            android:label="@string/app_name">
-
-        </activity>
-
-        <activity
-            android:name=".ExperienceListActivity"
-            android:label="@string/app_name">
-
-        </activity>
-
-        <activity
-            android:name=".ProfileActivity"
-            android:label="@string/app_name">
-        </activity>
-
-        <activity
-            android:name=".CheckinActivity"
-            android:label="@string/app_name">
-        </activity>
-
-        <activity
-            android:name=".FindUsersActivity"
-            android:label="@string/app_name">
-        </activity>
     </application>
 
 </manifest>
