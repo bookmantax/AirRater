@@ -91,7 +91,7 @@ public class SplashActivity extends AppCompatActivity {
             gpsManager.stopUsingGPS();
         }
 
-        int secondsDelayed = 5;
+        int secondsDelayed = 3;
         new Handler().postDelayed(new Runnable() {
             public void run() {
                 if (settings.getInt("UserId", 0) == 0)

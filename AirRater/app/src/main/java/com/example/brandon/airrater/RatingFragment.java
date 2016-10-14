@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 import org.json.JSONObject;
 
@@ -42,7 +44,9 @@ public class RatingFragment extends android.support.v4.app.Fragment
     String types[] = {"Restaurant", "Drinks", "Entertainment"};
     String location, businessName, comments, city, country;
     int typeId;
+    private double latitude, longitude;
     private Button submit;
+    private ProgressBar rateExperienceProgressBar;
     EditText commentsEditText;
     TextView rateResponseTextView;
     Spinner typeSpinner;
@@ -83,6 +87,7 @@ public class RatingFragment extends android.support.v4.app.Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         settings = mActivity.getSharedPreferences("UserPreferences", 0);
+        editor = settings.edit();
         typeId = 1;
     }
 
@@ -106,6 +111,8 @@ public class RatingFragment extends android.support.v4.app.Fragment
             public void onPlaceSelected(Place place) {
                 geocoder = new Geocoder(rootView.getContext(), Locale.getDefault());
                 latLng = place.getLatLng();
+                latitude = latLng.latitude;
+                longitude = latLng.longitude;
                 try {
                     addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
                 } catch (Exception e){}
@@ -124,6 +131,10 @@ public class RatingFragment extends android.support.v4.app.Fragment
                     editor.commit();
                     location = city + ", " + country;
                     autocompleteFragmentLocation.setText(location);
+                    autocompleteFragmentBusiness.setText("");
+                    autocompleteFragmentBusiness.setBoundsBias(new LatLngBounds(
+                            new LatLng(latitude - 0.5, longitude - 0.5),
+                            new LatLng(latitude + 0.5, longitude + 0.5)));
                 }
             }
 
@@ -174,6 +185,7 @@ public class RatingFragment extends android.support.v4.app.Fragment
         rateResponseTextView = (TextView)rootView.findViewById(R.id.rateResponseTextView);
         commentsEditText = (EditText)rootView.findViewById(R.id.commentsEditText);
         starsRatingBar = (RatingBar)rootView.findViewById(R.id.starsRatingBar);
+        rateExperienceProgressBar = (ProgressBar)rootView.findViewById(R.id.rateExperienceProgressBar);
 
         typeSpinner = (Spinner)rootView.findViewById(R.id.typeSpinner);
         spinnerTypeAdapter = new ArrayAdapter<String>(mActivity, R.layout.support_simple_spinner_dropdown_item, types);
@@ -199,6 +211,8 @@ public class RatingFragment extends android.support.v4.app.Fragment
 
     public void Submit()
     {
+        rateExperienceProgressBar.setVisibility(View.VISIBLE);
+        submit.setEnabled(false);
         comments = String.valueOf(commentsEditText.getText());
         if(RequiredFieldsHaveValue(settings.getInt("UserId", 0), businessName, typeId, location))
         {
@@ -225,6 +239,8 @@ public class RatingFragment extends android.support.v4.app.Fragment
                         {
                             rateResponseTextView.setText("Something went wrong please try again.");
                             rateResponseTextView.setTextColor(Color.RED);
+                            rateExperienceProgressBar.setVisibility(View.GONE);
+                            submit.setEnabled(true);
                         }
                         else if(result != null)
                         {
@@ -235,11 +251,15 @@ public class RatingFragment extends android.support.v4.app.Fragment
                             autocompleteFragmentBusiness.setText("");
                             starsRatingBar.setNumStars(0);
                             commentsEditText.setText("");
+                            rateExperienceProgressBar.setVisibility(View.GONE);
+                            submit.setEnabled(true);
                         }
                         else
                         {
                             rateResponseTextView.setText("NULL.");
                             rateResponseTextView.setTextColor(Color.RED);
+                            rateExperienceProgressBar.setVisibility(View.GONE);
+                            submit.setEnabled(true);
                         }
                     }
                 }).start();
@@ -252,6 +272,8 @@ public class RatingFragment extends android.support.v4.app.Fragment
         {
             rateResponseTextView.setText("Please make sure at least business name, location, and type have values.");
             rateResponseTextView.setTextColor(Color.RED);
+            rateExperienceProgressBar.setVisibility(View.GONE);
+            submit.setEnabled(true);
         }
     }
 

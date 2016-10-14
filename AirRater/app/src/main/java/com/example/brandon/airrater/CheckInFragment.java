@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +39,7 @@ import java.util.Locale;
 
 public class CheckInFragment extends android.support.v4.app.Fragment
 {
-
+    private ProgressBar checkinProgressBar;
     private TextView checkinResponseTextView;
     private ListView checkinUsersListView;
     private String location, businessName, city, country;
@@ -86,10 +87,7 @@ public class CheckInFragment extends android.support.v4.app.Fragment
         editor = settings.edit();
         location = settings.getString("Location", "");
         businessName = settings.getString("Business", "");
-        if (location != "" && businessName != "")
-        {
-            GetUsers();
-        }
+
     }
 
 
@@ -102,6 +100,11 @@ public class CheckInFragment extends android.support.v4.app.Fragment
         businessName = settings.getString("Business", "");
         checkinResponseTextView = (TextView) rootView.findViewById(R.id.checkinResponseTextView);
         checkinUsersListView = (ListView) rootView.findViewById(R.id.checkinUsersListView);
+        checkinProgressBar = (ProgressBar)rootView.findViewById(R.id.checkinProgressBar);
+        if (location != "" && businessName != "")
+        {
+            GetUsers();
+        }
 
         adapter = new UserAdapter(getContext(), R.layout.user_item, items);
         checkinUsersListView.setAdapter(adapter);
@@ -210,8 +213,9 @@ public class CheckInFragment extends android.support.v4.app.Fragment
         return rootView;
     }
 
-    private boolean GetUserCheckedIn()
+    private void GetUserCheckedIn()
     {
+        checkinProgressBar.setVisibility(View.VISIBLE);
         try {
             RequestParams params = new RequestParams();
             JSONObject object = new JSONObject();
@@ -230,18 +234,25 @@ public class CheckInFragment extends android.support.v4.app.Fragment
                             checkinCheckinButton.setText("CheckedIn");
                             checkinResponseTextView.setText("You are currently checked in to a business.");
                             checkinResponseTextView.setTextColor(Color.GREEN);
+                            checkinProgressBar.setVisibility(View.GONE);
                         }
+                        else{
+                            checkinProgressBar.setVisibility(View.GONE);
+                        }
+                    }
+                    else{
+                        checkinProgressBar.setVisibility(View.GONE);
                     }
                 }
             }).start();
         } catch (Exception e) {
 
         }
-        return false;
     }
 
     private void GetUsers()
     {
+        checkinProgressBar.setVisibility(View.VISIBLE);
         try {
             RequestParams params = new RequestParams();
             JSONObject object = new JSONObject();
@@ -256,11 +267,12 @@ public class CheckInFragment extends android.support.v4.app.Fragment
                     String s = result;
                     if(result != null) {
                         if (s.equalsIgnoreCase("Missing Information")) {
-
+                            checkinProgressBar.setVisibility(View.GONE);
                         } else if (s.equalsIgnoreCase("User not found") || s.equalsIgnoreCase("No Users Checked In")) {
                             items.clear();
                             items.add(new UserItem("No Users Found", "", ""));
                             adapter.notifyDataSetChanged();
+                            checkinProgressBar.setVisibility(View.GONE);
                         } else if(!result.equalsIgnoreCase("")){
                             try {
                                 JSONArray jsonArray = new JSONArray(result);
@@ -270,14 +282,15 @@ public class CheckInFragment extends android.support.v4.app.Fragment
                                     items.add(new UserItem(oneObject.getString("firstName") + " " + oneObject.getString("lastName"),
                                             oneObject.getString("businessName"), oneObject.getString("airline")));
                                 }
-
                                 adapter.notifyDataSetChanged();
+                                checkinProgressBar.setVisibility(View.GONE);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         } else {
                             items.clear();
                             adapter.notifyDataSetChanged();
+                            checkinProgressBar.setVisibility(View.GONE);
                         }
                     }
                 }
@@ -289,6 +302,7 @@ public class CheckInFragment extends android.support.v4.app.Fragment
 
     public void Checkin()
     {
+        checkinProgressBar.setVisibility(View.VISIBLE);
         if(checkedIn || (location != "" && businessName != ""))
         {
             try {
@@ -315,20 +329,24 @@ public class CheckInFragment extends android.support.v4.app.Fragment
                             if (result.equalsIgnoreCase("Missing Information")) {
                                 checkinResponseTextView.setText("Something went wrong, please try again.");
                                 checkinResponseTextView.setTextColor(Color.RED);
+                                checkinProgressBar.setVisibility(View.GONE);
                             } else if(result.equalsIgnoreCase("Success")) {
                                 checkinResponseTextView.setText("CheckIn created successfully.");
                                 checkinResponseTextView.setTextColor(Color.GREEN);
                                 checkinCheckinButton.setText("Checked In");
+                                checkinProgressBar.setVisibility(View.GONE);
                                 GetUsers();
                             } else if(result.equalsIgnoreCase("CheckedOut")) {
                                 checkedIn = false;
                                 checkinResponseTextView.setText("Checked out.");
                                 checkinResponseTextView.setTextColor(Color.GREEN);
                                 checkinCheckinButton.setText("CheckIn");
+                                checkinProgressBar.setVisibility(View.GONE);
                                 GetUsers();
                             } else {
                                 checkinResponseTextView.setText("Something went wrong, please try again.");
                                 checkinResponseTextView.setTextColor(Color.RED);
+                                checkinProgressBar.setVisibility(View.GONE);
                             }
                         }
                     }
@@ -341,6 +359,7 @@ public class CheckInFragment extends android.support.v4.app.Fragment
         {
             checkinResponseTextView.setText("Please make sure all fields have a value.");
             checkinResponseTextView.setTextColor(Color.RED);
+            checkinProgressBar.setVisibility(View.GONE);
         }
     }
 }

@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ public class ProfileFragment extends android.support.v4.app.Fragment
 {
     private EditText profileFirstNameEditText, profileLastNameEditText,
             profileEmailEditText;
+    private ProgressBar profileProgressBar;
     private AutoCompleteTextView profileAirlineEditText;
     private ArrayAdapter<String> adapter;
     private TextView profileResponseTextView;
@@ -72,6 +74,7 @@ public class ProfileFragment extends android.support.v4.app.Fragment
         storedAirline = settings.getString("Airline", "");
         storedEmail = settings.getString("EmailAddress", "");
 
+        profileProgressBar = (ProgressBar)rootView.findViewById(R.id.profileProgressBar);
         profileResponseTextView = (TextView)rootView.findViewById(R.id.profileResponseTextView);
 
         profileFirstNameEditText = (EditText)rootView.findViewById(R.id.profileFirstNameEditText);
@@ -103,6 +106,8 @@ public class ProfileFragment extends android.support.v4.app.Fragment
 
     public void Submit()
     {
+        profileProgressBar.setVisibility(View.VISIBLE);
+        profileSubmitButton.setEnabled(false);
         editor = settings.edit();
         firstName = String.valueOf(profileFirstNameEditText.getText());
         lastName = String.valueOf(profileLastNameEditText.getText());
@@ -133,13 +138,19 @@ public class ProfileFragment extends android.support.v4.app.Fragment
                             if (s.equalsIgnoreCase("No Change")) {
                                 profileResponseTextView.setText("No changes were made.");
                                 profileResponseTextView.setTextColor(Color.RED);
+                                profileProgressBar.setVisibility(View.GONE);
+                                profileSubmitButton.setEnabled(true);
                             } else if (s.equalsIgnoreCase("Missing Information")) {
                                 profileResponseTextView.setText("Something went wrong please try again.");
                                 profileResponseTextView.setTextColor(Color.RED);
+                                profileProgressBar.setVisibility(View.GONE);
+                                profileSubmitButton.setEnabled(true);
                             } else if (s.equalsIgnoreCase("Success"))
                             {
                                 profileResponseTextView.setText("Saved.");
                                 profileResponseTextView.setTextColor(Color.GREEN);
+                                profileProgressBar.setVisibility(View.GONE);
+                                profileSubmitButton.setEnabled(true);
                             }
                         }
                         else
@@ -150,6 +161,8 @@ public class ProfileFragment extends android.support.v4.app.Fragment
 
                             Toast toast = Toast.makeText(context, text, duration);
                             toast.show();
+                            profileProgressBar.setVisibility(View.GONE);
+                            profileSubmitButton.setEnabled(true);
                         }
                     }
                 }).start();
@@ -161,6 +174,8 @@ public class ProfileFragment extends android.support.v4.app.Fragment
         {
             profileResponseTextView.setText("No changes were made.");
             profileResponseTextView.setTextColor(Color.RED);
+            profileProgressBar.setVisibility(View.GONE);
+            profileSubmitButton.setEnabled(true);
         }
     }
 

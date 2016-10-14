@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ public class SignupActivity extends AppCompatActivity
 {
     String firstName, lastName, emailAddress, airline, username, password;
     private ArrayAdapter<String> adapter;
+    private ProgressBar signupProgressBar;
     EditText firstEditText, lastEditText, emailEditText, usernameEditText,
         passwordEditText;
     AutoCompleteTextView airlineEditText;
@@ -54,6 +56,8 @@ public class SignupActivity extends AppCompatActivity
         usernameEditText = (EditText)findViewById(R.id.usernameEditText);
         passwordEditText = (EditText)findViewById(R.id.passwordEditText);
         createUserButton = (Button)findViewById(R.id.createAccountButton);
+        signupLoginButton = (Button)findViewById(R.id.signupLoginButton);
+        signupProgressBar = (ProgressBar)findViewById(R.id.signupProgressBar);
     }
 
     @Override
@@ -71,6 +75,10 @@ public class SignupActivity extends AppCompatActivity
 
     public void CreateUser(View view)
     {
+        createUserButton.setEnabled(false);
+        signupLoginButton.setEnabled(false);
+        signupProgressBar.setVisibility(View.VISIBLE);
+
         firstName = String.valueOf(firstEditText.getText());
         lastName = String.valueOf(lastEditText.getText());
         emailAddress = String.valueOf(emailEditText.getText());
@@ -102,6 +110,9 @@ public class SignupActivity extends AppCompatActivity
                         if (s != null && s.equalsIgnoreCase("Missing Information")) {
                             signupResponseTextView.setText("Something went wrong please try again.");
                             signupResponseTextView.setTextColor(Color.RED);
+                            createUserButton.setEnabled(true);
+                            signupLoginButton.setEnabled(true);
+                            signupProgressBar.setVisibility(View.GONE);
                         }
                         else if(s!= null)
                         {
@@ -123,9 +134,18 @@ public class SignupActivity extends AppCompatActivity
                             } catch (JSONException e) {
                                 // Oops
                             }
+                            signupProgressBar.setVisibility(View.GONE);
                             //Send user to search page.
                             Intent activity = new Intent(SignupActivity.this, MainActivity.class);
                             startActivity(activity);
+                            finish();
+                        }
+                        else{
+                            signupResponseTextView.setText("Something went wrong please try again.");
+                            signupResponseTextView.setTextColor(Color.RED);
+                            createUserButton.setEnabled(true);
+                            signupLoginButton.setEnabled(true);
+                            signupProgressBar.setVisibility(View.GONE);
                         }
                     }
                 }).start();
@@ -137,6 +157,9 @@ public class SignupActivity extends AppCompatActivity
         {
             signupResponseTextView.setText("Please make sure all fields have a value.");
             signupResponseTextView.setTextColor(Color.RED);
+            createUserButton.setEnabled(true);
+            signupLoginButton.setEnabled(true);
+            signupProgressBar.setVisibility(View.GONE);
         }
     }
 

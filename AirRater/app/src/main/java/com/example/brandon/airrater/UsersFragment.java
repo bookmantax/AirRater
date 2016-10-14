@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +43,7 @@ import java.util.Locale;
 public class UsersFragment extends android.support.v4.app.Fragment
 {
     PlaceAutocompleteFragment autocompleteFragmentLocation;
+    private ProgressBar findUsersProgressBar;
     private TextView findUsersResponseTextView;
     private ListView findUsersListView;
     private String location, city, country;
@@ -87,6 +89,7 @@ public class UsersFragment extends android.support.v4.app.Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.activity_find_users, container, false);
 
+        findUsersProgressBar = (ProgressBar)rootView.findViewById(R.id.findUsersProgressBar);
         autocompleteFragmentLocation = (PlaceAutocompleteFragment) mActivity.getFragmentManager().findFragmentById(R.id.findUsersLocationEditText);
         autocompleteFragmentLocation.setText(settings.getString("Location", ""));
         AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
@@ -154,6 +157,7 @@ public class UsersFragment extends android.support.v4.app.Fragment
 
     private void SearchSetAdapter()
     {
+        findUsersProgressBar.setVisibility(View.VISIBLE);
         if(location != null && location != "")
         {
             if(location != settings.getString("Location", ""))
@@ -178,6 +182,7 @@ public class UsersFragment extends android.support.v4.app.Fragment
                             {
                                 findUsersResponseTextView.setText("Something went wrong please try again.");
                                 findUsersResponseTextView.setTextColor(Color.RED);
+                                findUsersProgressBar.setVisibility(View.GONE);
                             }
                             else if (result.equalsIgnoreCase("User not found") || result.equalsIgnoreCase("No Users Checked In"))
                             {
@@ -186,6 +191,7 @@ public class UsersFragment extends android.support.v4.app.Fragment
                                 adapter = new UserAdapter(getContext(), R.layout.user_item, items);
                                 findUsersListView.setAdapter(adapter);
                                 findUsersResponseTextView.setText("");
+                                findUsersProgressBar.setVisibility(View.GONE);
                             }
                             else
                             {
@@ -200,6 +206,7 @@ public class UsersFragment extends android.support.v4.app.Fragment
                                     adapter = new UserAdapter(getContext(), R.layout.user_item, items);
                                     findUsersListView.setAdapter(adapter);
                                     findUsersResponseTextView.setText("");
+                                    findUsersProgressBar.setVisibility(View.GONE);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -213,6 +220,7 @@ public class UsersFragment extends android.support.v4.app.Fragment
 
                             Toast toast = Toast.makeText(context, text, duration);
                             toast.show();
+                            findUsersProgressBar.setVisibility(View.GONE);
                         }
                     }
                 }).start();
@@ -224,6 +232,7 @@ public class UsersFragment extends android.support.v4.app.Fragment
         {
             findUsersResponseTextView.setText("Please make sure Location has a value.");
             findUsersResponseTextView.setTextColor(Color.RED);
+            findUsersProgressBar.setVisibility(View.GONE);
         }
     }
 
@@ -250,7 +259,6 @@ public class UsersFragment extends android.support.v4.app.Fragment
                         super.onPostExecute(result, notes);
                         if(result != null && result.equalsIgnoreCase("Missing Information"))
                         {
-
                         }
                         else if(result != null && result.equalsIgnoreCase("User not found") || result.equalsIgnoreCase("No Users Checked In"))
                         {
@@ -279,7 +287,6 @@ public class UsersFragment extends android.support.v4.app.Fragment
         }
         else
         {
-
         }
     }
 }

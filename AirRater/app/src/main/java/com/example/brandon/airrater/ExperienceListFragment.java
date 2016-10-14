@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +40,7 @@ public class ExperienceListFragment extends android.support.v4.app.Fragment
 
     ExpandableListView experienceExpandableListView;
     private TextView experienceListCityTextView;
+    private ProgressBar experienceListProgressBar;
     private ExpandableExperienceAdapter exAdapter;
     private List<ExperienceItem> listDataHeader;
     private HashMap<ExperienceItem, List<ExperienceDetails>> listDataChild;
@@ -72,6 +74,7 @@ public class ExperienceListFragment extends android.support.v4.app.Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_experience_list, container, false);
 
+        experienceListProgressBar = (ProgressBar)rootView.findViewById(R.id.experienceListProgressBar);
         experienceListCityTextView = (TextView)rootView.findViewById(R.id.experienceListCityTextView);
         experienceListCityTextView.setText(settings.getString("Location", ""));
         experienceExpandableListView = (ExpandableListView)rootView.findViewById(R.id.experienceExpandableListView);
@@ -85,6 +88,7 @@ public class ExperienceListFragment extends android.support.v4.app.Fragment
 
     private void PrepareListData()
     {
+        experienceListProgressBar.setVisibility(View.VISIBLE);
         try {
             RequestParams params = new RequestParams();
             JSONObject object = new JSONObject();
@@ -108,6 +112,7 @@ public class ExperienceListFragment extends android.support.v4.app.Fragment
 
                         Toast toast = Toast.makeText(context, text, duration);
                         toast.show();
+                        experienceListProgressBar.setVisibility(View.GONE);
                     }
                     else if(s != null && s.equalsIgnoreCase("No Ratings"))
                     {
@@ -159,6 +164,7 @@ public class ExperienceListFragment extends android.support.v4.app.Fragment
                                                 ratings.add(expDetails);
                                                 listDataHeader.add(expItem);
                                                 listDataChild.put(listDataHeader.get(i), ratings);
+                                                experienceListProgressBar.setVisibility(View.GONE);
                                             }
                                             exAdapter.notifyDataSetChanged();
                                         } catch (Exception e) {
@@ -170,7 +176,6 @@ public class ExperienceListFragment extends android.support.v4.app.Fragment
                         } catch(Exception e){
                             e.printStackTrace();
                         }
-
                     } else if(result != null)
                     {
                         try {
@@ -197,6 +202,7 @@ public class ExperienceListFragment extends android.support.v4.app.Fragment
                                     listDataChild.put(listDataHeader.get(i), ratings);
                                 }
                                 exAdapter.notifyDataSetChanged();
+                                experienceListProgressBar.setVisibility(View.GONE);
                             } catch (JSONException e) {
                                 // Oops
                                 Log.w("Error", e);
@@ -212,6 +218,7 @@ public class ExperienceListFragment extends android.support.v4.app.Fragment
 
                         Toast toast = Toast.makeText(mActivity, text, duration);
                         toast.show();
+                        experienceListProgressBar.setVisibility(View.GONE);
                     }
                 }
             }).start();
