@@ -29,9 +29,12 @@ import java.util.Locale;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private static final String[] INITIAL_PERMS={
+    private static final String[] LOCATION_PERMS={
             Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.READ_CONTACTS
+            Manifest.permission.ACCESS_COARSE_LOCATION
+    };
+    private static final String[] INTERNET_PERMS={
+            Manifest.permission.ACCESS_FINE_LOCATION
     };
     private static final int INITIAL_REQUEST=1337;
     private static final int LOCATION_REQUEST=INITIAL_REQUEST+3;
@@ -47,8 +50,11 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        if(!canAccessInternet()){
+            requestPermissions(INTERNET_PERMS, INITIAL_REQUEST);
+        }
         if (!canAccessLocation()) {
-            requestPermissions(INITIAL_PERMS, INITIAL_REQUEST);
+            requestPermissions(LOCATION_PERMS, INITIAL_REQUEST);
         }
         else
         {
@@ -131,7 +137,11 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private boolean canAccessLocation() {
-        return(hasPermission(Manifest.permission.ACCESS_FINE_LOCATION));
+        return(hasPermission(Manifest.permission.ACCESS_FINE_LOCATION) || hasPermission(Manifest.permission.ACCESS_COARSE_LOCATION));
+    }
+
+    private boolean canAccessInternet(){
+        return(hasPermission(Manifest.permission.INTERNET));
     }
 
     private boolean hasPermission(String perm) {
